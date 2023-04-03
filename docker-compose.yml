@@ -1,0 +1,42 @@
+# 使用说明 V4.6.0
+# 1. 使用docker-compose  宿主机不需要配置host来发现
+# 2. 无需修改源码，根目录  docker-compose up 即可
+# 3. 静静等待服务启动
+
+version: '3'
+services:
+  tdcloud-mysql:
+    build:
+      context: ./db
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    container_name: tdcloud-mysql
+    image: tdcloud-mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./tdcloud-mysql:/var/lib/mysql
+    command: --lower_case_table_names=1
+
+  tdcloud-redis:
+    container_name: tdcloud-redis
+    image: redis:6.2.6
+    restart: always
+    ports:
+      - 6379:6379
+
+  tdcloud-upms:
+    build:
+      context: ./tdcloud-upms/tdcloud-upms-biz
+    restart: always
+    container_name: tdcloud-upms
+    image: tdcloud-upms
+
+  tdcloud-codegen:
+    build:
+      context: ./tdcloud-visual/tdcloud-codegen
+    restart: always
+    image: tdcloud-codegen
+    container_name: tdcloud-codegen

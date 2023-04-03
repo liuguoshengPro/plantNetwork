@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~
+  ~      Copyright (c) 2018-2025, tdcloud All rights reserved.
+  ~
+  ~  Redistribution and use in source and binary forms, with or without
+  ~  modification, are permitted provided that the following conditions are met:
+  ~
+  ~ Redistributions of source code must retain the above copyright notice,
+  ~  this list of conditions and the following disclaimer.
+  ~  Redistributions in binary form must reproduce the above copyright
+  ~  notice, this list of conditions and the following disclaimer in the
+  ~  documentation and/or other materials provided with the distribution.
+  ~  Neither the name of the pig4cloud.com developer nor the names of its
+  ~  contributors may be used to endorse or promote products derived from
+  ~  this software without specific prior written permission.
+  ~  Author: tdcloud
+  ~
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.PlantMaintainMapper">
+
+  <resultMap id="plantMaintainMap" type="com.tdkj.tdcloud.admin.api.entity.PlantMaintain">
+        <id property="id" column="id"/>
+        <result property="maintainProblem" column="maintain_problem"/>
+        <result property="maintainUnit" column="maintain_unit"/>
+        <result property="maintainUser" column="maintain_user"/>
+        <result property="maintainTime" column="maintain_time"/>
+        <result property="solution" column="solution"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isSolve" column="is_solve"/>
+        <result property="problemOther" column="problem_other"/>
+        <result property="maintainContent" column="maintain_content"/>
+  </resultMap>
+
+	<sql id="selectPlantMaintainVo">
+		select id, maintain_problem, maintain_unit,maintain_content, maintain_user, maintain_time, solution, create_time, is_solve, problem_other from plant_maintain
+	</sql>
+
+	<select id="selectPlantMaintainList" parameterType="com.tdkj.tdcloud.admin.api.entity.PlantMaintain" resultMap="plantMaintainMap">
+		<include refid="selectPlantMaintainVo"/>
+		<where>
+			<if test="maintainProblem != null  and maintainProblem != ''"> and maintain_problem = #{maintainProblem}</if>
+			<if test="maintainUnit != null  and maintainUnit != ''"> and maintain_unit = #{maintainUnit}</if>
+			<if test="maintainUser != null  and maintainUser != ''"> and maintain_user = #{maintainUser}</if>
+			<if test="maintainTime != null "> and maintain_time = #{maintainTime}</if>
+			<if test="solution != null  and solution != ''"> and solution = #{solution}</if>
+			<if test="isSolve != null  and isSolve != ''"> and is_solve = #{isSolve}</if>
+			<if test="problemOther != null  and problemOther != ''"> and problem_other = #{problemOther}</if>
+		</where>
+		ORDER BY  create_time DESC
+		limit #{page},#{pageSize}
+	</select>
+
+	<select id="selectPlantMaintainListTotal" parameterType="com.tdkj.tdcloud.admin.api.entity.PlantMaintain" resultType="integer">
+		select count(id) from plant_maintain
+
+		<where>
+			<if test="maintainProblem != null  and maintainProblem != ''"> and maintain_problem = #{maintainProblem}</if>
+			<if test="maintainUnit != null  and maintainUnit != ''"> and maintain_unit = #{maintainUnit}</if>
+			<if test="maintainUser != null  and maintainUser != ''"> and maintain_user = #{maintainUser}</if>
+			<if test="maintainTime != null "> and maintain_time = #{maintainTime}</if>
+			<if test="solution != null  and solution != ''"> and solution = #{solution}</if>
+			<if test="isSolve != null  and isSolve != ''"> and is_solve = #{isSolve}</if>
+			<if test="problemOther != null  and problemOther != ''"> and problem_other = #{problemOther}</if>
+		</where>
+
+	</select>
+
+	<select id="selectDictItemList"  resultType="com.tdkj.tdcloud.admin.api.entity.DictItem">
+		select id id,dict_id dictId, item_value value , label label, dict_type DateType from sys_dict_item
+		where  dict_type = #{dataType} and del_flag = 0
+	</select>
+
+	<select id="selectPlantMaintainById" parameterType="Long" resultMap="plantMaintainMap">
+		<include refid="selectPlantMaintainVo"/>
+		where id = #{id}
+	</select>
+	<select id="selectPmThisYear" resultType="com.tdkj.tdcloud.admin.api.entity.PlantMaintainChart">
+
+		SELECT DATEPART(yyyy,maintain_time) AS yearData, count(*) AS num FROM plant_maintain WHERE YEAR(maintain_time) = year(GETDATE()) GROUP BY DATEPART(yyyy,maintain_time)
+	</select>
+	<select id="selectPmYear" parameterType="integer" resultType="com.tdkj.tdcloud.admin.api.entity.PlantMaintainChart">
+
+		select DATEPART(yyyy,maintain_time) as yearData,count(*) AS num from plant_maintain where YEAR(maintain_time) = year(GETDATE()) - #{figure} GROUP BY DATEPART(yyyy,maintain_time)
+	</select>
+
+	<select id="selectMaintainProblemTotal" parameterType="String" resultType="integer">
+
+		SELECT COUNT(*) FROM plant_maintain WHERE maintain_problem  = #{maintainProblem}
+	</select>
+
+	<select id="selectPmTotal" resultType="int">
+
+		select count(*) from plant_maintain
+	</select>
+
+	<insert id="insertPlantMaintain" parameterType="com.tdkj.tdcloud.admin.api.entity.PlantMaintain" useGeneratedKeys="true" keyProperty="id">
+		insert into plant_maintain
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="maintainProblem != null">maintain_problem,</if>
+			<if test="maintainUnit != null">maintain_unit,</if>
+			<if test="maintainUser != null">maintain_user,</if>
+			<if test="maintainTime != null">maintain_time,</if>
+			<if test="solution != null">solution,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="isSolve != null">is_solve,</if>
+			<if test="problemOther != null">problem_other,</if>
+			<if test="maintainContent != null">maintain_content,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="maintainProblem != null">#{maintainProblem},</if>
+			<if test="maintainUnit != null">#{maintainUnit},</if>
+			<if test="maintainUser != null">#{maintainUser},</if>
+			<if test="maintainTime != null">#{maintainTime},</if>
+			<if test="solution != null">#{solution},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="isSolve != null">#{isSolve},</if>
+			<if test="problemOther != null">#{problemOther},</if>
+			<if test="maintainContent != null">#{maintainContent},</if>
+		</trim>
+	</insert>
+
+	<update id="updatePlantMaintain" parameterType="com.tdkj.tdcloud.admin.api.entity.PlantMaintain">
+		update plant_maintain
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="maintainProblem != null">maintain_problem = #{maintainProblem},</if>
+			<if test="maintainUnit != null">maintain_unit = #{maintainUnit},</if>
+			<if test="maintainUser != null">maintain_user = #{maintainUser},</if>
+			<if test="maintainTime != null">maintain_time = #{maintainTime},</if>
+			<if test="solution != null">solution = #{solution},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="isSolve != null">is_solve = #{isSolve},</if>
+			<if test="problemOther != null">problem_other = #{problemOther},</if>
+			<if test="maintainContent != null">maintain_content = #{maintainContent},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deletePlantMaintainById" parameterType="Long">
+		delete from plant_maintain where id = #{id}
+	</delete>
+
+	<delete id="deletePlantMaintainByIds" parameterType="String">
+		delete from plant_maintain where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,58 @@
+server:
+  port: 5003
+  servlet:
+    context-path: /gen
+
+# 配置文件加密根密码
+jasypt:
+  encryptor:
+    password: pigx
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+spring:
+  application:
+    name: @project.artifactId@
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  profiles:
+    default: @profiles.active@
+
+# 端点对外暴露
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      show-details: ALWAYS
+
+# mybatis-plus 配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      where-strategy: not_empty
+      insert-strategy: not_empty
+      update-strategy: not_null
+  type-handlers-package: com.tdkj.tdcloud.common.data.handler
+  configuration:
+    jdbc-type-for-null: 'null'
+    call-setters-on-nulls: true
+
+# oauth2 资源服务器相关配置
+security:
+  oauth2:
+    client:
+      ignore-urls:
+        - /api/designer/**
+    resource:
+      token-info-uri: /oauth/check_token
+

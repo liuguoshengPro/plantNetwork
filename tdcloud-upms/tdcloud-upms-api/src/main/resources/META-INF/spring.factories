@@ -1,0 +1,10 @@
+# 配置 feignclient 的全类名路径， 避免包名不规范无法扫描问题
+com.tdkj.tdcloud.common.feign.TdcloudFeignAutoConfiguration=\
+  com.tdkj.tdcloud.admin.api.feign.RemoteDataScopeService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteClientDetailsService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteLogService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteParamService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteTenantService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteTokenService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteUserService,\
+  com.tdkj.tdcloud.admin.api.feign.RemoteDictService

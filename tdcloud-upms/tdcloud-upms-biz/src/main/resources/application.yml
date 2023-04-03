@@ -1,0 +1,63 @@
+server:
+  port: 9999
+  servlet:
+    context-path: /admin
+
+# 配置文件加密根密码
+jasypt:
+  encryptor:
+    password: pigx
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+spring:
+  application:
+    name: @project.artifactId@
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  profiles:
+    active: dev,job
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+
+# 端点对外暴露
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      show-details: ALWAYS
+
+# mybatis-plus 配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      where-strategy: not_empty
+      insert-strategy: not_empty
+      update-strategy: not_null
+  type-handlers-package: com.tdkj.tdcloud.common.data.handler
+  configuration:
+    jdbc-type-for-null: 'null'
+    call-setters-on-nulls: true
+
+# 验证码配置
+aj:
+  captcha:
+    water-mark: pig4cloud
+
+# 配置swagger 信息覆盖 common-swagger 中内置的
+swagger:
+  enabled: true
+  title: tdcloud Swagger API
+  token-url: ${swagger.gateway}/admin/oauth2/token
+  scope: server
