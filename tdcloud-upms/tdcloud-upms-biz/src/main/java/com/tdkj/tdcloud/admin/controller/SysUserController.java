@@ -216,11 +216,12 @@ public class SysUserController {
 		return userService.lockUser(username);
 	}
 
-//	@PostMapping("/getEmailCode")
-//	public void getEmailCode(String email){
-////		return userService.sendVerificationCode(email);
-//		userService.sendSimpleMail(email, "test simple mail2", " 邮件收到了吗");
-//
-//	}
+	@Inner(value = false)
+	@PostMapping("/userRegister")
+	public R saveUserRegister(@RequestBody SysUser sysUser){
+//		return userService.sendVerificationCode(email);
+		return userService.userRegister(sysUser);
+
+	}
 
 }

@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tdkj.tdcloud.admin.api.dto.UserDTO;
 import com.tdkj.tdcloud.admin.api.dto.UserInfo;
+import com.tdkj.tdcloud.admin.api.entity.EmailSender;
 import com.tdkj.tdcloud.admin.api.entity.SysUser;
 import com.tdkj.tdcloud.admin.api.vo.UserExcelVO;
 import com.tdkj.tdcloud.admin.api.vo.UserVO;
@@ -128,4 +129,7 @@ public interface SysUserService extends IService<SysUser> {
 
 	//public void sendSimpleMail(String to, String subject, String content);
 
+
+
+	public R userRegister(SysUser sysUser);
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.CheckReasonMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.CheckReason" id="CheckReasonResult">
+        <result property="id"    column="id"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="isAgree"    column="is_agree"    />
+        <result property="masterId"    column="master_id"    />
+    </resultMap>
+
+    <sql id="selectCheckReasonVo">
+        select id, item_type, remark, create_time,master_id, update_time, user_id, is_agree from check_reason
+    </sql>
+
+    <select id="selectCheckReasonList" parameterType="com.tdkj.tdcloud.admin.api.entity.CheckReason" resultMap="CheckReasonResult">
+        <include refid="selectCheckReasonVo"/>
+        <where>  
+            <if test="itemType != null  and itemType != ''"> and item_type = #{itemType}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isAgree != null  and isAgree != ''"> and is_agree = #{isAgree}</if>
+        </where>
+    </select>
+    
+    <select id="selectCheckReasonById" parameterType="Long" resultMap="CheckReasonResult">
+        <include refid="selectCheckReasonVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectCRByMasterId" parameterType="Long" resultMap="CheckReasonResult">
+		<include refid="selectCheckReasonVo"/>
+		where master_id = #{masterId}
+	</select>
+
+    <insert id="insertCheckReason" parameterType="com.tdkj.tdcloud.admin.api.entity.CheckReason" useGeneratedKeys="true" keyProperty="id">
+        insert into check_reason
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemType != null">item_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isAgree != null">is_agree,</if>
+            <if test="masterId != null">master_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="itemType != null">#{itemType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isAgree != null">#{isAgree},</if>
+            <if test="masterId != null">#{masterId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCheckReason" parameterType="com.tdkj.tdcloud.admin.api.entity.CheckReason">
+        update check_reason
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemType != null">item_type = #{itemType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isAgree != null">is_agree = #{isAgree},</if>
+            <if test="masterId != null">master_id = #{masterId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCheckReasonById" parameterType="Long">
+        delete from check_reason where id = #{id}
+    </delete>
+
+	<delete id="deleteCheckReasonByBusinessCode" parameterType="String">
+        delete from check_reason where business_code = #{businessCode}
+    </delete>
+
+    <delete id="deleteCheckReasonByIds" parameterType="String">
+        delete from check_reason where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

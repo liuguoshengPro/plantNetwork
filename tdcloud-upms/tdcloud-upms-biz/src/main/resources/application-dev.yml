@@ -47,31 +47,45 @@ spring:
           config:
             multi-statement-allow: true
 
+  mail:
+    default-encoding: UTF-8
+    host: mail.cstnet.cn
+    username: message@mail.kib.ac.cn
+    password: P8YmnFMv7%zPRZ4A
+    port: 465
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          timeout: 25000
+
+  freemarker:
+    template-loader-path: classpath:/templates
+    cache: true
+    checkTemplateLocation: true
+    settings:
+      classic_compatible: true #处理空值
+      template_exception_handler: rethrow
+      template_update_delay: 0
+      datetime_format: yyyy-MM-dd HH:mm:ss
+      number_format: 0.##
+    suffix: .ftl
+
 #  mail:
 #    default-encoding: UTF-8
-#    username: message@mail.kib.ac.cn
-#    password: P8YmnFMv7%ZPRZ4A
-#    host: mail.cstnet.cn
+#    host: smtp.qq.com
+#    username: 761301854@qq.com
+#    password: ulistgobolevbceb
+#    port: 465
 #    protocol: smtp
 #    properties:
 #      mail:
 #        smtp:
 #        auth: true
 #        timeout: 25000
-#    port: 465
-
-  mail:
-    default-encoding: UTF-8
-    host: smtp.qq.com
-    username: 761301854@qq.com
-    password: ulistgobolevbceb
-    port: 465
-    protocol: smtp
-    properties:
-      mail:
-        smtp:
-        auth: true
-        timeout: 25000
 
 
 # 本地文件系统

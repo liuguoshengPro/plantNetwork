@@ -88,6 +88,11 @@ public class SysFileController {
 		return sysFileService.uploadFile(file);
 	}
 
+	@PostMapping(value = "/uploadFile")
+	public R uploadFile(@RequestPart("file") MultipartFile file,@RequestParam("masterId")Long masterId,@RequestParam("itemType")String itemType) {
+		return sysFileService.uploadFileNew(file,masterId,itemType);
+	}
+
 	/**
 	 * 获取文件
 	 * @param bucket 桶名称

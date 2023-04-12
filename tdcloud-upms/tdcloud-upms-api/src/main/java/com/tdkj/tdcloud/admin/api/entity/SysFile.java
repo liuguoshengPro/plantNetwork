@@ -75,6 +75,12 @@ public class SysFile extends Model<SysFile> {
 	@Schema(description = "文件大小")
 	private Long fileSize;
 
+	@Schema(description = "事项类型id")
+	private Long masterId;
+
+	@Schema(description = "事项类型")
+	private String itemType;
+
 	/**
 	 * 上传人
 	 */
@@ -110,5 +116,8 @@ public class SysFile extends Model<SysFile> {
 	@TableField(fill = FieldFill.INSERT)
 	@Schema(description = "删除标记,1:已删除,0:正常")
 	private String delFlag;
+
+	@TableField(exist = false)
+	private String url;
 
 }

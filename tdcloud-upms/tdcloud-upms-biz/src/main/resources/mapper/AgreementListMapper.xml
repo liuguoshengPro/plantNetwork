@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.AgreementListMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.AgreementList" id="AgreementListResult">
+        <result property="id"    column="id"    />
+        <result property="unitType"    column="unit_type"    />
+        <result property="serverSerial"    column="server_serial"    />
+        <result property="usageScenario"    column="usage_scenario"    />
+        <result property="operatingSystem"    column="operating_system"    />
+        <result property="leader"    column="leader"    />
+        <result property="contactWay"    column="contact_way"    />
+        <result property="note"    column="note"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+		<result property="menuTypeId"    column="menu_type_id"    />
+		<result property="resourceType"    column="resource_type"    />
+    </resultMap>
+
+    <sql id="selectAgreementListVo">
+        select id, unit_type, server_serial, usage_scenario,resource_type,menu_type_id, operating_system, leader, contact_way, note, create_time, is_delete from agreement_list
+    </sql>
+
+    <select id="selectAgreementListList" parameterType="com.tdkj.tdcloud.admin.api.entity.AgreementList" resultMap="AgreementListResult">
+        <include refid="selectAgreementListVo"/>
+        <where>  
+            <if test="unitType != null  and unitType != ''"> and unit_type = #{unitType}</if>
+            <if test="serverSerial != null  and serverSerial != ''"> and server_serial = #{serverSerial}</if>
+            <if test="usageScenario != null  and usageScenario != ''"> and usage_scenario = #{usageScenario}</if>
+            <if test="operatingSystem != null  and operatingSystem != ''"> and operating_system = #{operatingSystem}</if>
+            <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="contactWay != null  and contactWay != ''"> and contact_way = #{contactWay}</if>
+            <if test="note != null  and note != ''"> and note = #{note}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectAgreementListById" parameterType="Long" resultMap="AgreementListResult">
+        <include refid="selectAgreementListVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectAgreementListByMenuTypeId" parameterType="Long" resultMap="AgreementListResult">
+		<include refid="selectAgreementListVo"/>
+		where menu_type_id = #{menuTypeId}
+	</select>
+        
+    <insert id="insertAgreementList" parameterType="com.tdkj.tdcloud.admin.api.entity.AgreementList">
+        insert into agreement_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="unitType != null">unit_type,</if>
+            <if test="serverSerial != null">server_serial,</if>
+            <if test="usageScenario != null">usage_scenario,</if>
+            <if test="operatingSystem != null">operating_system,</if>
+            <if test="leader != null">leader,</if>
+            <if test="contactWay != null">contact_way,</if>
+            <if test="note != null">note,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+			<if test="menuTypeId != null">menu_type_id,</if>
+			<if test="resourceType != null">resource_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="unitType != null">#{unitType},</if>
+            <if test="serverSerial != null">#{serverSerial},</if>
+            <if test="usageScenario != null">#{usageScenario},</if>
+            <if test="operatingSystem != null">#{operatingSystem},</if>
+            <if test="leader != null">#{leader},</if>
+            <if test="contactWay != null">#{contactWay},</if>
+            <if test="note != null">#{note},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+			<if test="menuTypeId != null">#{menuTypeId},</if>
+			<if test="resourceType != null">#{resourceType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAgreementList" parameterType="com.tdkj.tdcloud.admin.api.entity.AgreementList">
+        update agreement_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitType != null">unit_type = #{unitType},</if>
+            <if test="serverSerial != null">server_serial = #{serverSerial},</if>
+            <if test="usageScenario != null">usage_scenario = #{usageScenario},</if>
+            <if test="operatingSystem != null">operating_system = #{operatingSystem},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="contactWay != null">contact_way = #{contactWay},</if>
+            <if test="note != null">note = #{note},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAgreementListById" parameterType="Long">
+        delete from agreement_list where id = #{id}
+    </delete>
+
+    <delete id="deleteAgreementListByIds" parameterType="String">
+        delete from agreement_list where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

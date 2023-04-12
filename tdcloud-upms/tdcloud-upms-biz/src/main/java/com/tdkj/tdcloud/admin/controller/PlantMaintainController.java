@@ -52,12 +52,20 @@ public class PlantMaintainController {
      * @return
      */
 //    @ApiOperation(value = "分页查询", notes = "分页查询")
-	@Inner(value = false)
+
     @GetMapping("/page" )
     @PreAuthorize("@pms.hasPermission('admin_plantmaintain_view')" )
     public R getPlantMaintainPage(Page page, PlantMaintain plantMaintain) {
         return R.ok(plantMaintainService.page(page, Wrappers.query(plantMaintain)));
     }
+
+	@CrossOrigin
+	@Inner(value = false)
+	@GetMapping("/noAccess" )
+	//@PreAuthorize("@pms.hasPermission('admin_plantmaintain_view')" )
+	public R getPlantMaintainNoAccess(Page page, PlantMaintain plantMaintain) {
+		return R.ok(plantMaintainService.page(page, Wrappers.query(plantMaintain)));
+	}
 
 
     /**
@@ -125,7 +133,7 @@ public class PlantMaintainController {
         return plantMaintainService.list(Wrappers.query(plantMaintain));
     }
 
-
+	@CrossOrigin
     @Inner(value = false)
 	@GetMapping("/getPlantMaintainColumnar")
 	@ResponseBody

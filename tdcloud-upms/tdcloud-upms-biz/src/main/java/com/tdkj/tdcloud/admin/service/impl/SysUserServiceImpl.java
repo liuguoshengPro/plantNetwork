@@ -33,6 +33,7 @@ import com.tdkj.tdcloud.admin.api.vo.UserExcelVO;
 import com.tdkj.tdcloud.admin.api.vo.UserVO;
 import com.tdkj.tdcloud.admin.mapper.SysUserMapper;
 import com.tdkj.tdcloud.admin.mapper.SysUserPostMapper;
+import com.tdkj.tdcloud.admin.mapper.SysUserRoleMapper;
 import com.tdkj.tdcloud.admin.service.*;
 import com.tdkj.tdcloud.common.core.constant.CacheConstants;
 import com.tdkj.tdcloud.common.core.constant.CommonConstants;
@@ -50,6 +51,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -89,6 +91,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	private final SysUserPostMapper sysUserPostMapper;
 
+	@Resource
+	private RedisTemplate redisTemplate;
+
+	@Resource
+	private SysUserRoleMapper sysUserRoleMapper;
+
+	@Resource
+	private SysUserMapper sysUserMapper;
+
 //	@Resource
 //	private JavaMailSender mailSender;
 //
@@ -117,14 +128,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		sysUser.setPassword(ENCODER.encode(userDto.getPassword()));
 		baseMapper.insert(sysUser);
 		// 保存用户岗位信息
-		Optional.ofNullable(userDto.getPost()).ifPresent(posts -> {
-			posts.stream().map(postId -> {
-				SysUserPost userPost = new SysUserPost();
-				userPost.setUserId(sysUser.getUserId());
-				userPost.setPostId(postId);
-				return userPost;
-			}).forEach(sysUserPostMapper::insert);
-		});
+//		Optional.ofNullable(userDto.getPost()).ifPresent(posts -> {
+//			posts.stream().map(postId -> {
+//				SysUserPost userPost = new SysUserPost();
+//				userPost.setUserId(sysUser.getUserId());
+//				userPost.setPostId(postId);
+//				return userPost;
+//			}).forEach(sysUserPostMapper::insert);
+//		});
 
 		// 如果角色为空，赋默认角色
 		if (CollUtil.isEmpty(userDto.getRole())) {
@@ -495,4 +506,34 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 //		pro.put("mail.smtp.ssl.enable", "true");
 //		pro.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 //	}
+
+	@Transactional
+	@Override
+	public R userRegister(SysUser sysUser) {
+
+		int i1 = sysUserMapper.getUserVoByEmail(sysUser.getUsername());
+		if (i1==1){
+			return R.failed("邮箱已被注册");
+		}
+		String code = (String)redisTemplate.opsForValue().get(sysUser.getToEmail() + "register");
+		logger.info("-------------------------"+code);
+		if (!sysUser.getCode().equals(code)){
+			return R.failed("验证码错误");
+		}
+		sysUser.setDelFlag(CommonConstants.STATUS_NORMAL);
+		sysUser.setPassword(ENCODER.encode(sysUser.getPassword()));
+		sysUser.setDeptId(2L);
+		sysUser.setUsername(sysUser.getToEmail());
+		baseMapper.insert(sysUser);
+
+		Long roleId = sysUserRoleMapper.selectRoleId("GENERAL_USER");
+		SysUserRole sysUserRole = new SysUserRole();
+		sysUserRole.setUserId(sysUser.getUserId());
+		sysUserRole.setRoleId(roleId);
+		int i = sysUserRoleMapper.insertUserId(sysUserRole);
+		if (i==1){
+			return R.ok("注册成功");
+		}
+		return R.failed("注册失败");
+	}
 }

@@ -181,4 +181,10 @@ public class SysUser implements Serializable {
 	@Schema(description = "邮箱")
 	private String email;
 
+
+	@TableField(exist = false)
+	public String toEmail;
+	@TableField(exist = false)
+	public String code;
+
 }

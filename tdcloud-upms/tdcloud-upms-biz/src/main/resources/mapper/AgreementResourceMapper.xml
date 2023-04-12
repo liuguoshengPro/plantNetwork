@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.AgreementResourceMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.AgreementResource" id="AgreementResourceResult">
+        <result property="id"    column="id"    />
+        <result property="serverSerial"    column="server_serial"    />
+        <result property="isPower"    column="is_power"    />
+        <result property="powerSupply"    column="power_supply"    />
+        <result property="cabinetSpace"    column="cabinet_space"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="cabinetPosition"    column="cabinet_position"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+		<result property="menuTypeId"    column="menu_type_id"    />
+		<result property="resourceType"    column="resource_type"    />
+    </resultMap>
+
+    <sql id="selectAgreementResourceVo">
+        select id, server_serial, is_power, power_supply,resource_type,menu_type_id, cabinet_space, ip_address, cabinet_position, create_time, is_delete from agreement_resource
+    </sql>
+
+    <select id="selectAgreementResourceList" parameterType="com.tdkj.tdcloud.admin.api.entity.AgreementResource" resultMap="AgreementResourceResult">
+        <include refid="selectAgreementResourceVo"/>
+        <where>  
+            <if test="serverSerial != null  and serverSerial != ''"> and server_serial = #{serverSerial}</if>
+            <if test="isPower != null  and isPower != ''"> and is_power = #{isPower}</if>
+            <if test="powerSupply != null  and powerSupply != ''"> and power_supply = #{powerSupply}</if>
+            <if test="cabinetSpace != null  and cabinetSpace != ''"> and cabinet_space = #{cabinetSpace}</if>
+            <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
+            <if test="cabinetPosition != null  and cabinetPosition != ''"> and cabinet_position = #{cabinetPosition}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectAgreementResourceById" parameterType="Long" resultMap="AgreementResourceResult">
+        <include refid="selectAgreementResourceVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectAgreementResourceByMenuTypeId" parameterType="Long" resultMap="AgreementResourceResult">
+		<include refid="selectAgreementResourceVo"/>
+		where menu_type_id = #{menuTypeId}
+	</select>
+        
+    <insert id="insertAgreementResource" parameterType="com.tdkj.tdcloud.admin.api.entity.AgreementResource">
+        insert into agreement_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="serverSerial != null">server_serial,</if>
+            <if test="isPower != null">is_power,</if>
+            <if test="powerSupply != null">power_supply,</if>
+            <if test="cabinetSpace != null">cabinet_space,</if>
+            <if test="ipAddress != null">ip_address,</if>
+            <if test="cabinetPosition != null">cabinet_position,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+			<if test="menuTypeId != null">menu_type_id,</if>
+			<if test="resourceType != null">resource_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="serverSerial != null">#{serverSerial},</if>
+            <if test="isPower != null">#{isPower},</if>
+            <if test="powerSupply != null">#{powerSupply},</if>
+            <if test="cabinetSpace != null">#{cabinetSpace},</if>
+            <if test="ipAddress != null">#{ipAddress},</if>
+            <if test="cabinetPosition != null">#{cabinetPosition},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+			<if test="menuTypeId != null">#{menuTypeId},</if>
+			<if test="resourceType != null">#{resourceType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAgreementResource" parameterType="com.tdkj.tdcloud.admin.api.entity.AgreementResource">
+        update agreement_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serverSerial != null">server_serial = #{serverSerial},</if>
+            <if test="isPower != null">is_power = #{isPower},</if>
+            <if test="powerSupply != null">power_supply = #{powerSupply},</if>
+            <if test="cabinetSpace != null">cabinet_space = #{cabinetSpace},</if>
+            <if test="ipAddress != null">ip_address = #{ipAddress},</if>
+            <if test="cabinetPosition != null">cabinet_position = #{cabinetPosition},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAgreementResourceById" parameterType="Long">
+        delete from agreement_resource where id = #{id}
+    </delete>
+
+    <delete id="deleteAgreementResourceByIds" parameterType="String">
+        delete from agreement_resource where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

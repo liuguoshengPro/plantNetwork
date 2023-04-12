@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.DutyApplyReasonMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.DutyApplyReason" id="DutyApplyReasonResult">
+        <result property="id"    column="id"    />
+        <result property="resourceName"    column="resource_name"    />
+        <result property="resourceLocation"    column="resource_location"    />
+        <result property="purpose"    column="purpose"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+		<result property="menuTypeId"    column="menu_type_id"    />
+		<result property="resourceType"    column="resource_type"    />
+    </resultMap>
+
+    <sql id="selectDutyApplyReasonVo">
+        select id, resource_name, resource_location,menu_type_id,resource_type, purpose, create_time, is_delete from duty_apply_reason
+    </sql>
+
+    <select id="selectDutyApplyReasonList" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyApplyReason" resultMap="DutyApplyReasonResult">
+        <include refid="selectDutyApplyReasonVo"/>
+        <where>  
+            <if test="resourceName != null  and resourceName != ''"> and resource_name like concat('%', #{resourceName}, '%')</if>
+            <if test="resourceLocation != null  and resourceLocation != ''"> and resource_location = #{resourceLocation}</if>
+            <if test="purpose != null  and purpose != ''"> and purpose = #{purpose}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectDutyApplyByMenuTypeId" parameterType="Long" resultMap="DutyApplyReasonResult">
+        <include refid="selectDutyApplyReasonVo"/>
+        where menu_type_id = #{menuTypeId}
+    </select>
+	<select id="selectDutyApplyReasonById" parameterType="Long" resultMap="DutyApplyReasonResult">
+		<include refid="selectDutyApplyReasonVo"/>
+		where id = #{id}
+	</select>
+        
+    <insert id="insertDutyApplyReason" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyApplyReason">
+        insert into duty_apply_reason
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="resourceName != null">resource_name,</if>
+            <if test="resourceLocation != null">resource_location,</if>
+            <if test="purpose != null">purpose,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="menuTypeId != null">menu_type_id,</if>
+            <if test="resourceType != null">resource_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="resourceName != null">#{resourceName},</if>
+            <if test="resourceLocation != null">#{resourceLocation},</if>
+            <if test="purpose != null">#{purpose},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="menuTypeId != null">#{menuTypeId},</if>
+            <if test="resourceType != null">#{resourceType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDutyApplyReason" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyApplyReason">
+        update duty_apply_reason
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resourceName != null">resource_name = #{resourceName},</if>
+            <if test="resourceLocation != null">resource_location = #{resourceLocation},</if>
+            <if test="purpose != null">purpose = #{purpose},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDutyApplyReasonById" parameterType="Long">
+        delete from duty_apply_reason where id = #{id}
+    </delete>
+
+    <delete id="deleteDutyApplyReasonByIds" parameterType="String">
+        delete from duty_apply_reason where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

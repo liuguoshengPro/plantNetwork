@@ -43,5 +43,7 @@ public interface SysUserRoleMapper extends TdcloudBaseMapper<SysUserRole> {
 	 * @date 2017年12月7日 16:31:38
 	 */
 	Boolean deleteByUserId(@Param("userId") Long userId);
+	int insertUserId(SysUserRole sysUserRole);
+	Long selectRoleId(String roleCode);
 
 }

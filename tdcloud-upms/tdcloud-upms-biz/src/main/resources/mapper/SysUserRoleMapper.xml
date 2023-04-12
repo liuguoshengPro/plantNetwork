@@ -32,4 +32,21 @@
 		DELETE FROM sys_user_role WHERE user_id = #{userId}
 	</delete>
 
+	<insert id="insertUserId" parameterType="com.tdkj.tdcloud.admin.api.entity.SysUserRole">
+		insert into sys_user_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">user_id,</if>
+			<if test="roleId != null">role_id,</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">#{userId},</if>
+			<if test="roleId != null">#{roleId},</if>
+		</trim>
+	</insert>
+
+
+	<select id="selectRoleId" parameterType="String" resultType="Long">
+		SELECT role_id roleId FROM sys_role WHERE role_code = #{roleCode}
+	</select>
 </mapper>

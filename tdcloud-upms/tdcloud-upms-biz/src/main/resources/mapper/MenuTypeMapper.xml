@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.MenuTypeMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.MenuType" id="MenuTypeResult">
+        <result property="id"    column="id"    />
+        <result property="masterId"    column="master_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="itemType"    column="Item_type"    />
+        <result property="applyType"    column="apply_type"    />
+        <result property="secondParty"    column="second_party"    />
+        <result property="platformNum"    column="platform_num"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="chargeStandard"    column="charge_standard"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="paymentUppercase"    column="payment_uppercase"    />
+        <result property="serviceCharge"    column="service_charge"    />
+    </resultMap>
+
+    <sql id="selectMenuTypeVo">
+        select id, master_id, create_time, is_delete, Item_type, apply_type, second_party, platform_num, start_time, end_time, charge_standard, payment_method, payment_uppercase, service_charge from menu_type
+    </sql>
+
+    <select id="selectMenuTypeList" parameterType="com.tdkj.tdcloud.admin.api.entity.MenuType" resultMap="MenuTypeResult">
+        <include refid="selectMenuTypeVo"/>
+        <where>  
+            <if test="masterId != null "> and master_id = #{masterId}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
+            <if test="applyType != null  and applyType != ''"> and apply_type = #{applyType}</if>
+            <if test="secondParty != null  and secondParty != ''"> and second_party = #{secondParty}</if>
+            <if test="platformNum != null "> and platform_num = #{platformNum}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="chargeStandard != null "> and charge_standard = #{chargeStandard}</if>
+            <if test="paymentMethod != null "> and payment_method = #{paymentMethod}</if>
+            <if test="paymentUppercase != null  and paymentUppercase != ''"> and payment_uppercase = #{paymentUppercase}</if>
+            <if test="serviceCharge != null "> and service_charge = #{serviceCharge}</if>
+        </where>
+    </select>
+    
+    <select id="selectMenuTypeById" parameterType="Long" resultMap="MenuTypeResult">
+        <include refid="selectMenuTypeVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectMenuTypeByMasterId" resultMap="MenuTypeResult">
+		<include refid="selectMenuTypeVo"/>
+		where master_id = #{masterId} and apply_type = #{applyType}
+	</select>
+
+	<select id="selectMenuTypeByMasterIdTotal" resultType="integer">
+		select count(id) from menu_type
+		where master_id = #{masterId}
+	</select>
+        
+    <insert id="insertMenuType" parameterType="com.tdkj.tdcloud.admin.api.entity.MenuType" useGeneratedKeys="true" keyProperty="id">
+        insert into menu_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="masterId != null">master_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="itemType != null">Item_type,</if>
+            <if test="applyType != null">apply_type,</if>
+            <if test="secondParty != null">second_party,</if>
+            <if test="platformNum != null">platform_num,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="chargeStandard != null">charge_standard,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="paymentUppercase != null">payment_uppercase,</if>
+            <if test="serviceCharge != null">service_charge,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="masterId != null">#{masterId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="itemType != null">#{itemType},</if>
+            <if test="applyType != null">#{applyType},</if>
+            <if test="secondParty != null">#{secondParty},</if>
+            <if test="platformNum != null">#{platformNum},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="chargeStandard != null">#{chargeStandard},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="paymentUppercase != null">#{paymentUppercase},</if>
+            <if test="serviceCharge != null">#{serviceCharge},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMenuType" parameterType="com.tdkj.tdcloud.admin.api.entity.MenuType">
+        update menu_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="masterId != null">master_id = #{masterId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="itemType != null">Item_type = #{itemType},</if>
+            <if test="applyType != null">apply_type = #{applyType},</if>
+            <if test="secondParty != null">second_party = #{secondParty},</if>
+            <if test="platformNum != null">platform_num = #{platformNum},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="chargeStandard != null">charge_standard = #{chargeStandard},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="paymentUppercase != null">payment_uppercase = #{paymentUppercase},</if>
+            <if test="serviceCharge != null">service_charge = #{serviceCharge},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMenuTypeById" parameterType="Long">
+        delete from menu_type where id = #{id}
+    </delete>
+
+    <delete id="deleteMenuTypeByIds" parameterType="String">
+        delete from menu_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.IpGradingReportMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.IpGradingReport" id="IpGradingReportResult">
+        <result property="id"    column="id"    />
+        <result property="masterId"    column="master_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="applyType"    column="apply_type"    />
+        <result property="systematicName"    column="systematic_name"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="safeLeader"    column="safe_leader"    />
+        <result property="phone"    column="phone"    />
+        <result property="runTime"    column="run_time"    />
+        <result property="description"    column="description"    />
+        <result property="businessDescription"    column="business_description"    />
+        <result property="objectConfirm"    column="object_confirm"    />
+        <result property="objectDegree"    column="object_degree"    />
+        <result property="businessGrade"    column="business_grade"    />
+        <result property="systemDescription"    column="system_description"    />
+        <result property="systemConfirm"    column="system_confirm"    />
+        <result property="systemDegree"    column="system_degree"    />
+        <result property="systemGrade"    column="system_grade"    />
+        <result property="safeGrade"    column="safe_grade"    />
+    </resultMap>
+
+    <sql id="selectIpGradingReportVo">
+        select id, master_id, create_time, is_delete, item_type, apply_type, systematic_name, ip_address, safe_leader, phone, run_time, description, business_description, object_confirm, object_degree, business_grade, system_description, system_confirm, system_degree, system_grade, safe_grade from ip_grading_report
+    </sql>
+
+    <select id="selectIpGradingReportList" parameterType="com.tdkj.tdcloud.admin.api.entity.IpGradingReport" resultMap="IpGradingReportResult">
+        <include refid="selectIpGradingReportVo"/>
+        <where>  
+            <if test="masterId != null "> and master_id = #{masterId}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="itemType != null  and itemType != ''"> and item_type = #{itemType}</if>
+            <if test="applyType != null  and applyType != ''"> and apply_type = #{applyType}</if>
+            <if test="systematicName != null  and systematicName != ''"> and systematic_name like concat('%', #{systematicName}, '%')</if>
+            <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
+            <if test="safeLeader != null  and safeLeader != ''"> and safe_leader = #{safeLeader}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="runTime != null "> and run_time = #{runTime}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="businessDescription != null  and businessDescription != ''"> and business_description = #{businessDescription}</if>
+            <if test="objectConfirm != null  and objectConfirm != ''"> and object_confirm = #{objectConfirm}</if>
+            <if test="objectDegree != null  and objectDegree != ''"> and object_degree = #{objectDegree}</if>
+            <if test="businessGrade != null  and businessGrade != ''"> and business_grade = #{businessGrade}</if>
+            <if test="systemDescription != null  and systemDescription != ''"> and system_description = #{systemDescription}</if>
+            <if test="systemConfirm != null  and systemConfirm != ''"> and system_confirm = #{systemConfirm}</if>
+            <if test="systemDegree != null  and systemDegree != ''"> and system_degree = #{systemDegree}</if>
+            <if test="systemGrade != null  and systemGrade != ''"> and system_grade = #{systemGrade}</if>
+            <if test="safeGrade != null  and safeGrade != ''"> and safe_grade = #{safeGrade}</if>
+        </where>
+    </select>
+    
+    <select id="selectIpGradingReportById" parameterType="Long" resultMap="IpGradingReportResult">
+        <include refid="selectIpGradingReportVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectIpReportByMasterId" parameterType="Long" resultMap="IpGradingReportResult">
+		<include refid="selectIpGradingReportVo"/>
+		where master_id = #{masterId}
+	</select>
+        
+    <insert id="insertIpGradingReport" parameterType="com.tdkj.tdcloud.admin.api.entity.IpGradingReport">
+        insert into ip_grading_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="masterId != null">master_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="itemType != null">item_type,</if>
+            <if test="applyType != null">apply_type,</if>
+            <if test="systematicName != null">systematic_name,</if>
+            <if test="ipAddress != null">ip_address,</if>
+            <if test="safeLeader != null">safe_leader,</if>
+            <if test="phone != null">phone,</if>
+            <if test="runTime != null">run_time,</if>
+            <if test="description != null">description,</if>
+            <if test="businessDescription != null">business_description,</if>
+            <if test="objectConfirm != null">object_confirm,</if>
+            <if test="objectDegree != null">object_degree,</if>
+            <if test="businessGrade != null">business_grade,</if>
+            <if test="systemDescription != null">system_description,</if>
+            <if test="systemConfirm != null">system_confirm,</if>
+            <if test="systemDegree != null">system_degree,</if>
+            <if test="systemGrade != null">system_grade,</if>
+            <if test="safeGrade != null">safe_grade,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="masterId != null">#{masterId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="itemType != null">#{itemType},</if>
+            <if test="applyType != null">#{applyType},</if>
+            <if test="systematicName != null">#{systematicName},</if>
+            <if test="ipAddress != null">#{ipAddress},</if>
+            <if test="safeLeader != null">#{safeLeader},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="runTime != null">#{runTime},</if>
+            <if test="description != null">#{description},</if>
+            <if test="businessDescription != null">#{businessDescription},</if>
+            <if test="objectConfirm != null">#{objectConfirm},</if>
+            <if test="objectDegree != null">#{objectDegree},</if>
+            <if test="businessGrade != null">#{businessGrade},</if>
+            <if test="systemDescription != null">#{systemDescription},</if>
+            <if test="systemConfirm != null">#{systemConfirm},</if>
+            <if test="systemDegree != null">#{systemDegree},</if>
+            <if test="systemGrade != null">#{systemGrade},</if>
+            <if test="safeGrade != null">#{safeGrade},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIpGradingReport" parameterType="com.tdkj.tdcloud.admin.api.entity.IpGradingReport">
+        update ip_grading_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="masterId != null">master_id = #{masterId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="itemType != null">item_type = #{itemType},</if>
+            <if test="applyType != null">apply_type = #{applyType},</if>
+            <if test="systematicName != null">systematic_name = #{systematicName},</if>
+            <if test="ipAddress != null">ip_address = #{ipAddress},</if>
+            <if test="safeLeader != null">safe_leader = #{safeLeader},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="runTime != null">run_time = #{runTime},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="businessDescription != null">business_description = #{businessDescription},</if>
+            <if test="objectConfirm != null">object_confirm = #{objectConfirm},</if>
+            <if test="objectDegree != null">object_degree = #{objectDegree},</if>
+            <if test="businessGrade != null">business_grade = #{businessGrade},</if>
+            <if test="systemDescription != null">system_description = #{systemDescription},</if>
+            <if test="systemConfirm != null">system_confirm = #{systemConfirm},</if>
+            <if test="systemDegree != null">system_degree = #{systemDegree},</if>
+            <if test="systemGrade != null">system_grade = #{systemGrade},</if>
+            <if test="safeGrade != null">safe_grade = #{safeGrade},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteIpGradingReportById" parameterType="Long">
+        delete from ip_grading_report where id = #{id}
+    </delete>
+
+    <delete id="deleteIpGradingReportByIds" parameterType="String">
+        delete from ip_grading_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

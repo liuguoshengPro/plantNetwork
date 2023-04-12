@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.DutyNetworkResourceMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource" id="DutyNetworkResourceResult">
+        <result property="id"    column="id"    />
+        <result property="resourceName"    column="resource_name"    />
+        <result property="intranetIp"    column="intranet_ip"    />
+        <result property="extranetIp"    column="extranet_ip"    />
+        <result property="domainName"    column="domain_name"    />
+        <result property="personCharge"    column="person_charge"    />
+        <result property="phone"    column="phone"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="menuTypeId"    column="menu_type_id"    />
+        <result property="resourceType"    column="resource_type"    />
+    </resultMap>
+
+    <sql id="selectDutyNetworkResourceVo">
+        select id, resource_name, intranet_ip,menu_type_id,resource_type, extranet_ip, domain_name, person_charge, phone, create_time, is_delete from duty_network_resource
+    </sql>
+
+    <select id="selectDutyNetworkResourceList" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource" resultMap="DutyNetworkResourceResult">
+        <include refid="selectDutyNetworkResourceVo"/>
+        <where>  
+            <if test="resourceName != null  and resourceName != ''"> and resource_name like concat('%', #{resourceName}, '%')</if>
+            <if test="intranetIp != null  and intranetIp != ''"> and intranet_ip = #{intranetIp}</if>
+            <if test="extranetIp != null  and extranetIp != ''"> and extranet_ip = #{extranetIp}</if>
+            <if test="domainName != null  and domainName != ''"> and domain_name like concat('%', #{domainName}, '%')</if>
+            <if test="personCharge != null  and personCharge != ''"> and person_charge = #{personCharge}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectDutyNetworkResourceById" parameterType="Long" resultMap="DutyNetworkResourceResult">
+        <include refid="selectDutyNetworkResourceVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectDutyNetworkByMenuTypeId" parameterType="Long" resultMap="DutyNetworkResourceResult">
+		<include refid="selectDutyNetworkResourceVo"/>
+		where menu_type_id = #{menuTypeId}
+	</select>
+        
+    <insert id="insertDutyNetworkResource" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource">
+        insert into duty_network_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="resourceName != null">resource_name,</if>
+            <if test="intranetIp != null">intranet_ip,</if>
+            <if test="extranetIp != null">extranet_ip,</if>
+            <if test="domainName != null">domain_name,</if>
+            <if test="personCharge != null">person_charge,</if>
+            <if test="phone != null">phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="menuTypeId != null">menu_type_id,</if>
+            <if test="resourceType != null">resource_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="resourceName != null">#{resourceName},</if>
+            <if test="intranetIp != null">#{intranetIp},</if>
+            <if test="extranetIp != null">#{extranetIp},</if>
+            <if test="domainName != null">#{domainName},</if>
+            <if test="personCharge != null">#{personCharge},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="menuTypeId != null">#{menuTypeId},</if>
+            <if test="resourceType != null">#{resourceType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDutyNetworkResource" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource">
+        update duty_network_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resourceName != null">resource_name = #{resourceName},</if>
+            <if test="intranetIp != null">intranet_ip = #{intranetIp},</if>
+            <if test="extranetIp != null">extranet_ip = #{extranetIp},</if>
+            <if test="domainName != null">domain_name = #{domainName},</if>
+            <if test="personCharge != null">person_charge = #{personCharge},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDutyNetworkResourceById" parameterType="Long">
+        delete from duty_network_resource where id = #{id}
+    </delete>
+
+    <delete id="deleteDutyNetworkResourceByIds" parameterType="String">
+        delete from duty_network_resource where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

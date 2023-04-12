@@ -148,7 +148,8 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
 			Object onlineQuantity = registeredClient.getClientSettings().getSettings()
 					.get(CommonConstants.ONLINE_QUANTITY);
 			// 没有设置并发控制走原有逻辑生成 || 设置同时在线为 true
-			if (Objects.isNull(onlineQuantity) || BooleanUtil.toBooleanObject((String) onlineQuantity)) {
+//			if (Objects.isNull(onlineQuantity) || BooleanUtil.toBooleanObject((String) onlineQuantity)) {
+			if (Objects.isNull(onlineQuantity) || Boolean.valueOf((String) onlineQuantity)) {
 				return generatAuthenticationToken(resouceOwnerBaseAuthentication, clientPrincipal, registeredClient,
 						authorizedScopes, usernamePasswordAuthentication);
 			}

@@ -23,6 +23,7 @@ import cn.hutool.core.util.StrUtil;
 import com.amazonaws.services.s3.model.S3Object;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tdkj.tdcloud.admin.api.entity.SysFile;
+import com.tdkj.tdcloud.admin.mapper.MasterDataMapper;
 import com.tdkj.tdcloud.admin.mapper.SysFileMapper;
 import com.tdkj.tdcloud.admin.service.SysFileService;
 import com.tdkj.tdcloud.common.core.util.R;
@@ -35,10 +36,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -57,11 +60,36 @@ public class SysFileServiceImpl extends ServiceImpl<SysFileMapper, SysFile> impl
 
 	private final FileProperties properties;
 
+
 	/**
 	 * 上传文件
 	 * @param file
 	 * @return
 	 */
+	@Override
+	public R uploadFileNew(MultipartFile file,Long masterId,String itemType) {
+		String originalFilename = new String(
+				Objects.requireNonNull(file.getOriginalFilename()).getBytes(StandardCharsets.ISO_8859_1),
+				StandardCharsets.UTF_8);
+		String fileName = IdUtil.simpleUUID() + StrUtil.DOT + FileUtil.extName(file.getOriginalFilename());
+		Map<String, String> resultMap = new HashMap<>(5);
+		resultMap.put("bucketName", properties.getBucketName());
+		resultMap.put("fileName", fileName);
+		resultMap.put("originalFilename", originalFilename);
+		resultMap.put("url", String.format("/admin/sys-file/%s/%s", properties.getBucketName(), fileName));
+
+		try (InputStream inputStream = file.getInputStream()) {
+			fileTemplate.putObject(properties.getBucketName(), fileName, inputStream, file.getContentType());
+			// 文件管理数据记录,收集管理追踪文件
+			fileLogNew(file, fileName,masterId,itemType);
+		}
+		catch (Exception e) {
+			log.error("上传失败", e);
+			return R.failed(e.getLocalizedMessage());
+		}
+		return R.ok(resultMap);
+	}
+
 	@Override
 	public R uploadFile(MultipartFile file) {
 		String fileName = IdUtil.simpleUUID() + StrUtil.DOT + FileUtil.extName(file.getOriginalFilename());
@@ -99,6 +127,7 @@ public class SysFileServiceImpl extends ServiceImpl<SysFileMapper, SysFile> impl
 		}
 	}
 
+
 	/**
 	 * 删除文件
 	 * @param id
@@ -129,6 +158,27 @@ public class SysFileServiceImpl extends ServiceImpl<SysFileMapper, SysFile> impl
 		sysFile.setFileSize(file.getSize());
 		sysFile.setType(FileUtil.extName(file.getOriginalFilename()));
 		sysFile.setBucketName(properties.getBucketName());
+		this.save(sysFile);
+	}
+
+	/**
+	 * 文件管理数据记录,收集管理追踪文件
+	 * @param file 上传文件格式
+	 * @param fileName 文件名
+	 */
+	private void fileLogNew(MultipartFile file, String fileName,Long masterId,String itemType) {
+		SysFile sysFile = new SysFile();
+		sysFile.setFileName(fileName);
+
+		String originalFilename = new String(
+				Objects.requireNonNull(file.getOriginalFilename()).getBytes(StandardCharsets.ISO_8859_1),
+				StandardCharsets.UTF_8);
+		sysFile.setOriginal(originalFilename);
+		sysFile.setFileSize(file.getSize());
+		sysFile.setType(FileUtil.extName(file.getOriginalFilename()));
+		sysFile.setBucketName(properties.getBucketName());
+		sysFile.setMasterId(masterId);
+		sysFile.setItemType(itemType);
 		this.save(sysFile);
 	}
 
