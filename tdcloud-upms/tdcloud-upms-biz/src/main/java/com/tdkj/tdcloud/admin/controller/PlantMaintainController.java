@@ -17,18 +17,31 @@
 
 package com.tdkj.tdcloud.admin.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tdkj.tdcloud.admin.api.dto.MasterDataDto;
+import com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintain;
+import com.tdkj.tdcloud.admin.api.vo.MasterDataVO;
+import com.tdkj.tdcloud.admin.api.vo.PlantMaintainVO;
+import com.tdkj.tdcloud.admin.api.vo.PostExcelVO;
 import com.tdkj.tdcloud.common.core.util.R;
+import com.tdkj.tdcloud.common.excel.annotation.RequestExcel;
 import com.tdkj.tdcloud.common.log.annotation.SysLog;
 import com.tdkj.tdcloud.admin.service.PlantMaintainService;
 import com.tdkj.tdcloud.common.security.annotation.Inner;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.tdkj.tdcloud.common.excel.annotation.ResponseExcel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -146,5 +159,35 @@ public class PlantMaintainController {
 	public R getDictItemList(){
 
 		return plantMaintainService.getDictItemList();
+	}
+
+
+	@PostMapping("/importPlantMaintain")
+	public R importPlantMaintain(@RequestExcel List<PlantMaintainVO> excelVOList, BindingResult bindingResult) {
+		return plantMaintainService.importPlantMaintain(excelVOList, bindingResult);
+	}
+
+	@Inner(value = false)
+	@ResponseExcel
+	@GetMapping("/exportPlantMaintain")
+	public List<PlantMaintainVO> exportPlantMaintain(PlantMaintainDTO plantMaintainDTO) {
+		return plantMaintainService.exportPlantMaintain(plantMaintainDTO);
+	}
+
+	@Inner(value = false)
+	@ResponseExcel
+	@GetMapping("/exportHeaderToExcel")
+	public void exportHeaderToExcel(HttpServletResponse response) throws IOException {
+		List<PlantMaintainVO> data = PlantMaintainVO.getEmptyData();
+
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-disposition", "attachment;filename=MyData.xlsx");
+
+		try (OutputStream out = response.getOutputStream()) {
+			ExcelWriter writer = EasyExcel.write(out).build();
+			WriteSheet sheet = EasyExcel.writerSheet(0).build();
+			writer.write(data, sheet);
+			writer.finish();
+		}
 	}
 }

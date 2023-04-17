@@ -17,9 +17,11 @@
 
 package com.tdkj.tdcloud.admin.mapper;
 
+import com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO;
 import com.tdkj.tdcloud.admin.api.entity.DictItem;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintain;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintainChart;
+import com.tdkj.tdcloud.admin.api.vo.PlantMaintainVO;
 import com.tdkj.tdcloud.common.data.datascope.TdcloudBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -43,6 +45,7 @@ public interface PlantMaintainMapper extends TdcloudBaseMapper<PlantMaintain> {
 	 */
 	public PlantMaintain selectPlantMaintainById(Long id);
 	public List<DictItem> selectDictItemList(@Param("dataType")String dataType);
+	public String selectDictItemLabel(@Param("itemValue")String itemValue);
 
 	public PlantMaintainChart selectPmThisYear();
 	public PlantMaintainChart selectPmYear(Integer figure);
@@ -56,6 +59,7 @@ public interface PlantMaintainMapper extends TdcloudBaseMapper<PlantMaintain> {
 	 * @return 维护信息数据集合
 	 */
 	public List<PlantMaintain> selectPlantMaintainList(PlantMaintain plantMaintain);
+	public List<PlantMaintainVO> selectExportPlantMaintain(PlantMaintainDTO plantMaintain);
 	public Integer selectPlantMaintainListTotal(PlantMaintain plantMaintain);
 
 	/**
@@ -65,6 +69,7 @@ public interface PlantMaintainMapper extends TdcloudBaseMapper<PlantMaintain> {
 	 * @return 结果
 	 */
 	public int insertPlantMaintain(PlantMaintain plantMaintain);
+	public int insertPlantMaintainVO(PlantMaintainVO plantMaintain);
 
 	/**
 	 * 修改维护信息数据

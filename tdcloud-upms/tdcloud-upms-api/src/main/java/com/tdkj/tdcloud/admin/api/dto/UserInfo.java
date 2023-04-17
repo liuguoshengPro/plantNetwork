@@ -19,11 +19,13 @@
 
 package com.tdkj.tdcloud.admin.api.dto;
 
+import com.tdkj.tdcloud.admin.api.entity.SysRole;
 import com.tdkj.tdcloud.admin.api.entity.SysUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author tdcloud
@@ -50,5 +52,8 @@ public class UserInfo implements Serializable {
 	 */
 	@Schema(description = "角色标识集合")
 	private Long[] roles;
+
+	@Schema(description = "角色标识")
+	private List<SysRole> roleCodes;
 
 }

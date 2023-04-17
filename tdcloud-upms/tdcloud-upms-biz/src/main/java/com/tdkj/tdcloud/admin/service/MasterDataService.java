@@ -29,4 +29,5 @@ public interface MasterDataService
 
 	R getFileList(Long masterId,String itemType);
 	R updateMasterDataAllocationStatus(Long masterId);
+	R getMasterStatistics(String year);
 }

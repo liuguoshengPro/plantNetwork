@@ -70,9 +70,36 @@
 
 	</select>
 
+	<select id="selectExportPlantMaintain" parameterType="com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO" resultType="com.tdkj.tdcloud.admin.api.vo.PlantMaintainVO">
+		<include refid="selectPlantMaintainVo"/>
+		<where>
+			<if test="maintainProblem != null  and maintainProblem != ''"> and maintain_problem = #{maintainProblem}</if>
+			<if test="maintainUnit != null  and maintainUnit != ''"> and maintain_unit = #{maintainUnit}</if>
+			<if test="maintainUser != null  and maintainUser != ''"> and maintain_user = #{maintainUser}</if>
+			<if test="maintainTime != null "> and maintain_time = #{maintainTime}</if>
+			<if test="solution != null  and solution != ''"> and solution = #{solution}</if>
+			<if test="isSolve != null  and isSolve != ''"> and is_solve = #{isSolve}</if>
+			<if test="problemOther != null  and problemOther != ''"> and problem_other = #{problemOther}</if>
+			<if test="idList !=null and idList.size()>0 ">
+				and id in
+				<foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+
+
+
+	</select>
+
 	<select id="selectDictItemList"  resultType="com.tdkj.tdcloud.admin.api.entity.DictItem">
 		select id id,dict_id dictId, item_value value , label label, dict_type DateType from sys_dict_item
 		where  dict_type = #{dataType} and del_flag = 0
+	</select>
+
+	<select id="selectDictItemLabel"  resultType="string">
+		select label from sys_dict_item
+		where  dict_type = 'maintain_type' and item_value = #{itemValue}
 	</select>
 
 	<select id="selectPlantMaintainById" parameterType="Long" resultMap="plantMaintainMap">
@@ -120,6 +147,30 @@
 			<if test="createTime != null">#{createTime},</if>
 			<if test="isSolve != null">#{isSolve},</if>
 			<if test="problemOther != null">#{problemOther},</if>
+			<if test="maintainContent != null">#{maintainContent},</if>
+		</trim>
+	</insert>
+
+	<insert id="insertPlantMaintainVO" parameterType="com.tdkj.tdcloud.admin.api.vo.PlantMaintainVO" useGeneratedKeys="true" keyProperty="id">
+		insert into plant_maintain
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="maintainProblem != null">maintain_problem,</if>
+			<if test="maintainUnit != null">maintain_unit,</if>
+			<if test="maintainUser != null">maintain_user,</if>
+			<if test="maintainTime != null">maintain_time,</if>
+			<if test="solution != null">solution,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="isSolve != null">is_solve,</if>
+			<if test="maintainContent != null">maintain_content,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="maintainProblem != null">#{maintainProblem},</if>
+			<if test="maintainUnit != null">#{maintainUnit},</if>
+			<if test="maintainUser != null">#{maintainUser},</if>
+			<if test="maintainTime != null">#{maintainTime},</if>
+			<if test="solution != null">#{solution},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="isSolve != null">#{isSolve},</if>
 			<if test="maintainContent != null">#{maintainContent},</if>
 		</trim>
 	</insert>

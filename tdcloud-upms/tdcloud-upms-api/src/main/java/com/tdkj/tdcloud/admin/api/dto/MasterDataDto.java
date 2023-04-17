@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 主数据对象 master_data
@@ -49,9 +50,23 @@ public class MasterDataDto
 	private String endSubmitTime;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date auditTime;
+	private String beginAuditTime;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private String endAuditTime;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date allocationTime;
+	private String beginAllocationTime;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private String endAllocationTime;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private String[] auditTime;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private String[] allocationTime;
+
+	private String auditType;
+
+	private List<Long> idList;
 
 }

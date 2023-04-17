@@ -93,6 +93,7 @@ file:
   local:
     enable: true
     basePath: /data/file
+#    basePath: D:/data/file/local
 
 # Logger Config
 logging:

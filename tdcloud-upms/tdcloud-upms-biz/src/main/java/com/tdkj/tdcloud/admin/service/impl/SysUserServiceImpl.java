@@ -172,13 +172,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 		// 设置权限列表（menu.permission）
 		Set<String> permissions = new HashSet<>();
+		List<SysRole> roleCodes = new ArrayList<>();
 		roleIds.forEach(roleId -> {
 			List<String> permissionList = sysMenuService.findMenuByRoleId(roleId).stream()
 					.filter(menu -> StrUtil.isNotEmpty(menu.getPermission())).map(SysMenu::getPermission)
 					.collect(Collectors.toList());
 			permissions.addAll(permissionList);
+
 		});
+		List<SysRole> roleCodeList = sysRoleService.findRolesByUserId(sysUser.getUserId()).stream()
+				.collect(Collectors.toList());
+		roleCodes.addAll(roleCodeList);
 		userInfo.setPermissions(ArrayUtil.toArray(permissions, String.class));
+		userInfo.setRoleCodes(roleCodes);
+		//设置权限标识
+
 		return userInfo;
 	}
 
@@ -520,6 +528,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if (!sysUser.getCode().equals(code)){
 			return R.failed("验证码错误");
 		}
+		if (isValidPassword(sysUser.getPassword())) {
+			logger.info("密码不符合要求"+sysUser.getPassword());
+		} else {
+			return R.failed("密码不符合要求");
+		}
 		sysUser.setDelFlag(CommonConstants.STATUS_NORMAL);
 		sysUser.setPassword(ENCODER.encode(sysUser.getPassword()));
 		sysUser.setDeptId(2L);
@@ -536,4 +549,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		}
 		return R.failed("注册失败");
 	}
+
+
+	public static boolean isValidPassword(String password) {
+		// 密码必须包含大写字母、小写字母、数字和特殊符号
+		String pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+		return password.matches(pattern);
+	}
+
 }

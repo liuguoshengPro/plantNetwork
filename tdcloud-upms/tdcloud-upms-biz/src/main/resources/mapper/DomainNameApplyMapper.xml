@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.DomainNameApplyMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.DomainNameApply" id="DomainNameApplyResult">
+        <result property="id"    column="id"    />
+        <result property="masterId"    column="master_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="applyType"    column="apply_type"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userDept"    column="user_dept"    />
+        <result property="applyTime"    column="apply_time"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="dnsDomain"    column="dns_domain"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="siteUsage"    column="site_usage"    />
+    </resultMap>
+
+    <sql id="selectDomainNameApplyVo">
+        select id, master_id, create_time, is_delete, item_type, apply_type, user_name, user_dept, apply_time, user_phone, dns_domain, ip_address, site_usage from domain_name_apply
+    </sql>
+
+    <select id="selectDomainNameApplyList" parameterType="com.tdkj.tdcloud.admin.api.entity.DomainNameApply" resultMap="DomainNameApplyResult">
+        <include refid="selectDomainNameApplyVo"/>
+        <where>  
+            <if test="masterId != null "> and master_id = #{masterId}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="itemType != null  and itemType != ''"> and item_type = #{itemType}</if>
+            <if test="applyType != null  and applyType != ''"> and apply_type = #{applyType}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userDept != null  and userDept != ''"> and user_dept = #{userDept}</if>
+            <if test="applyTime != null "> and apply_time = #{applyTime}</if>
+            <if test="userPhone != null  and userPhone != ''"> and user_phone = #{userPhone}</if>
+            <if test="dnsDomain != null  and dnsDomain != ''"> and dns_domain = #{dnsDomain}</if>
+            <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
+            <if test="siteUsage != null  and siteUsage != ''"> and site_usage = #{siteUsage}</if>
+        </where>
+    </select>
+    
+    <select id="selectDomainNameApplyById" parameterType="Long" resultMap="DomainNameApplyResult">
+        <include refid="selectDomainNameApplyVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectDomainByMasterId" parameterType="Long" resultMap="DomainNameApplyResult">
+		<include refid="selectDomainNameApplyVo"/>
+		where master_id = #{masterId}
+	</select>
+        
+    <insert id="insertDomainNameApply" parameterType="com.tdkj.tdcloud.admin.api.entity.DomainNameApply">
+        insert into domain_name_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="masterId != null">master_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="itemType != null">item_type,</if>
+            <if test="applyType != null">apply_type,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userDept != null">user_dept,</if>
+            <if test="applyTime != null">apply_time,</if>
+            <if test="userPhone != null">user_phone,</if>
+            <if test="dnsDomain != null">dns_domain,</if>
+            <if test="ipAddress != null">ip_address,</if>
+            <if test="siteUsage != null">site_usage,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="masterId != null">#{masterId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="itemType != null">#{itemType},</if>
+            <if test="applyType != null">#{applyType},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userDept != null">#{userDept},</if>
+            <if test="applyTime != null">#{applyTime},</if>
+            <if test="userPhone != null">#{userPhone},</if>
+            <if test="dnsDomain != null">#{dnsDomain},</if>
+            <if test="ipAddress != null">#{ipAddress},</if>
+            <if test="siteUsage != null">#{siteUsage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDomainNameApply" parameterType="com.tdkj.tdcloud.admin.api.entity.DomainNameApply">
+        update domain_name_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="masterId != null">master_id = #{masterId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="itemType != null">item_type = #{itemType},</if>
+            <if test="applyType != null">apply_type = #{applyType},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userDept != null">user_dept = #{userDept},</if>
+            <if test="applyTime != null">apply_time = #{applyTime},</if>
+            <if test="userPhone != null">user_phone = #{userPhone},</if>
+            <if test="dnsDomain != null">dns_domain = #{dnsDomain},</if>
+            <if test="ipAddress != null">ip_address = #{ipAddress},</if>
+            <if test="siteUsage != null">site_usage = #{siteUsage},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDomainNameApplyById" parameterType="Long">
+        delete from domain_name_apply where id = #{id}
+    </delete>
+
+    <delete id="deleteDomainNameApplyByIds" parameterType="String">
+        delete from domain_name_apply where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

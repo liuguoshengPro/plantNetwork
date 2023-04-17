@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.hutool.core.convert.Convert;
+import com.tdkj.tdcloud.admin.api.dto.DomainNameApplyDTO;
 import com.tdkj.tdcloud.admin.api.dto.IpGradingReportDTO;
 import com.tdkj.tdcloud.admin.api.dto.MenuTypeDto;
 import com.tdkj.tdcloud.admin.api.entity.*;
@@ -41,6 +42,13 @@ public class MenuTypeServiceImpl implements MenuTypeService
 
     @Resource
 	private IpGradingReportMapper ipGradingReportMapper;
+
+    @Resource
+	private DomainNameApplyMapper domainNameApplyMapper;
+
+    @Resource
+	private MasterDataMapper masterDataMapper;
+
 
 
     @Transactional
@@ -226,5 +234,74 @@ public class MenuTypeServiceImpl implements MenuTypeService
 				return R.failed();
 			}
 		}
+	}
+
+	@Override
+	public R saveMenuApplyDns(MenuTypeDto menuTypeDto) {
+		if (menuTypeDto.getId() == null) {
+			menuTypeDto.setCreateTime(new Date());
+			int i = menuTypeMapper.insertMenuType(menuTypeDto);
+			if (i == 1) {
+				return R.ok("添加成功");
+			} else {
+				return R.failed();
+			}
+		} else {
+			int i = menuTypeMapper.updateMenuType(menuTypeDto);
+			if (i == 1) {
+				return R.ok("修改成功");
+			} else {
+				return R.failed();
+			}
+		}
+	}
+
+	@Override
+	public R getSysDeptList() {
+		List<SysDept> sysDeptList = masterDataMapper.selectSysDept(0l);
+		return R.ok(sysDeptList,"部门列表数据");
+	}
+
+	@Override
+	public R saveUseDescription(UseDescription useDescription) {
+    	if (useDescription.getId()==null){
+    		useDescription.setCreateTime(new Date());
+			UseDescription useDescription1 = menuTypeMapper.selectUseDescriptionByItemType(useDescription.getItemType());
+			if (useDescription1!=null){
+				return R.ok(useDescription1,"已有数据");
+			}
+			int i = menuTypeMapper.insertUseDescription(useDescription);
+			if (i==1){
+				return R.ok(menuTypeMapper.selectUseDescriptionById(useDescription.getId()),"添加成功");
+			}
+		}else {
+    		int i = menuTypeMapper.updateUseDescription(useDescription);
+    		if (i == 1){
+    			return R.ok("修改成功");
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public R getUseDescription(String itemType) {
+
+    	if (itemType==null || "".equals(itemType)){
+    		return R.failed("参数错误");
+		}
+		UseDescription useDescription = menuTypeMapper.selectUseDescriptionByItemType(itemType);
+
+		return R.ok(useDescription,"数据");
+	}
+
+	@Override
+	public R selectChargeStandardList() {
+
+		return R.ok(menuTypeMapper.selectChargeStandardList(),"列表数据");
+	}
+
+	@Override
+	public R updateChargeStandard(ChargeStandard chargeStandard) {
+		return R.ok(menuTypeMapper.updateChargeStandard(chargeStandard),"修改成功");
 	}
 }

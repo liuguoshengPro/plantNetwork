@@ -5,8 +5,11 @@ import com.tdkj.tdcloud.admin.service.PlantMailService;
 import com.tdkj.tdcloud.common.core.util.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -81,6 +84,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 						""+y.format(currentDate)+"年"+m.format(currentDate)+"月"+d.format(currentDate)+"日";
 				helper.setText(String.format(textContent, num)); // 内容
 				redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
+
 			}
 			if ("applyAgree".equals(emailSender.getEmailType())){
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +

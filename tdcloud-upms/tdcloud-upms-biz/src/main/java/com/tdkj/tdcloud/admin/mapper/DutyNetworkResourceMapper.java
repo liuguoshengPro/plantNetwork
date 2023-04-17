@@ -1,6 +1,7 @@
 package com.tdkj.tdcloud.admin.mapper;
 
 import com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource;
+import com.tdkj.tdcloud.admin.api.vo.DutyNetworkResourceVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public interface DutyNetworkResourceMapper
      */
     public DutyNetworkResource selectDutyNetworkResourceById(Long id);
     public List<DutyNetworkResource> selectDutyNetworkByMenuTypeId(Long menuTypeId);
+    public List<DutyNetworkResourceVO> selectDutyNetworkByMenuTypeIdNew(Long menuTypeId);
 
     /**
      * 查询责任书中网络资源列表

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.InformationSystemMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.InformationSystem" id="InformationSystemResult">
+        <result property="id"    column="id"    />
+        <result property="systemName"    column="system_name"    />
+        <result property="useStatus"    column="use_status"    />
+        <result property="intranetIp"    column="intranet_ip"    />
+        <result property="extranetIp"    column="extranet_ip"    />
+        <result property="macAddress"    column="mac_address"    />
+        <result property="freeInternet"    column="free_internet"    />
+        <result property="storageLocation"    column="storage_location"    />
+        <result property="useDept"    column="use_dept"    />
+        <result property="userName"    column="user_name"    />
+        <result property="tcpRecord"    column="tcp_record"    />
+        <result property="equalRecord"    column="equal_record"    />
+        <result property="equalEvaluation"    column="equal_evaluation"    />
+        <result property="purpose"    column="purpose"    />
+        <result property="networkSecurity"    column="network_security"    />
+        <result property="hospitalSafety"    column="hospital_safety"    />
+        <result property="note"    column="note"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+	<resultMap type="com.tdkj.tdcloud.admin.api.vo.InformationSystemVO" id="InformationSystemResultVO">
+		<result property="id"    column="id"    />
+		<result property="systemName"    column="system_name"    />
+		<result property="useStatus"    column="use_status"    />
+		<result property="intranetIp"    column="intranet_ip"    />
+		<result property="extranetIp"    column="extranet_ip"    />
+		<result property="macAddress"    column="mac_address"    />
+		<result property="freeInternet"    column="free_internet"    />
+		<result property="storageLocation"    column="storage_location"    />
+		<result property="useDept"    column="use_dept"    />
+		<result property="userName"    column="user_name"    />
+		<result property="tcpRecord"    column="tcp_record"    />
+		<result property="equalRecord"    column="equal_record"    />
+		<result property="equalEvaluation"    column="equal_evaluation"    />
+		<result property="purpose"    column="purpose"    />
+		<result property="networkSecurity"    column="network_security"    />
+		<result property="hospitalSafety"    column="hospital_safety"    />
+		<result property="note"    column="note"    />
+		<result property="createTime"    column="create_time"    />
+	</resultMap>
+
+    <sql id="selectInformationSystemVo">
+        select id, system_name, use_status, intranet_ip, extranet_ip, mac_address, free_internet, storage_location, use_dept, user_name, tcp_record, equal_record, equal_evaluation, purpose, network_security, hospital_safety, note, create_time, is_delete from information_system
+    </sql>
+
+    <select id="selectInformationSystemList" parameterType="com.tdkj.tdcloud.admin.api.entity.InformationSystem" resultMap="InformationSystemResult">
+        <include refid="selectInformationSystemVo"/>
+        <where>  
+            <if test="systemName != null  and systemName != ''"> and system_name like concat('%', #{systemName}, '%')</if>
+            <if test="useStatus != null  and useStatus != ''"> and use_status = #{useStatus}</if>
+            <if test="intranetIp != null  and intranetIp != ''"> and intranet_ip = #{intranetIp}</if>
+            <if test="extranetIp != null  and extranetIp != ''"> and extranet_ip = #{extranetIp}</if>
+            <if test="macAddress != null  and macAddress != ''"> and mac_address = #{macAddress}</if>
+            <if test="freeInternet != null  and freeInternet != ''"> and free_internet = #{freeInternet}</if>
+            <if test="storageLocation != null  and storageLocation != ''"> and storage_location = #{storageLocation}</if>
+            <if test="useDept != null  and useDept != ''"> and use_dept = #{useDept}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="tcpRecord != null  and tcpRecord != ''"> and tcp_record = #{tcpRecord}</if>
+            <if test="equalRecord != null  and equalRecord != ''"> and equal_record = #{equalRecord}</if>
+            <if test="equalEvaluation != null  and equalEvaluation != ''"> and equal_evaluation = #{equalEvaluation}</if>
+            <if test="purpose != null  and purpose != ''"> and purpose = #{purpose}</if>
+            <if test="networkSecurity != null  and networkSecurity != ''"> and network_security = #{networkSecurity}</if>
+            <if test="hospitalSafety != null  and hospitalSafety != ''"> and hospital_safety = #{hospitalSafety}</if>
+            <if test="note != null  and note != ''"> and note = #{note}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectInformationSystemById" parameterType="Long" resultMap="InformationSystemResult">
+        <include refid="selectInformationSystemVo"/>
+        where id = #{id}
+    </select>
+
+	<select id="selectInfoSystemList" parameterType="com.tdkj.tdcloud.admin.api.dto.InformationSystemDTO" resultMap="InformationSystemResult">
+		<include refid="selectInformationSystemVo"/>
+		<where>
+			and is_delete = 0
+			<if test="systemName != null  and systemName != ''"> and system_name like concat('%', #{systemName}, '%')</if>
+			<if test="useStatus != null  and useStatus != ''"> and use_status = #{useStatus}</if>
+			<if test="intranetIp != null  and intranetIp != ''"> and intranet_ip = #{intranetIp}</if>
+			<if test="extranetIp != null  and extranetIp != ''"> and extranet_ip = #{extranetIp}</if>
+			<if test="macAddress != null  and macAddress != ''"> and mac_address = #{macAddress}</if>
+			<if test="freeInternet != null  and freeInternet != ''"> and free_internet = #{freeInternet}</if>
+			<if test="storageLocation != null  and storageLocation != ''"> and storage_location = #{storageLocation}</if>
+			<if test="useDept != null  and useDept != ''"> and use_dept = #{useDept}</if>
+			<if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+			<if test="tcpRecord != null  and tcpRecord != ''"> and tcp_record = #{tcpRecord}</if>
+			<if test="equalRecord != null  and equalRecord != ''"> and equal_record = #{equalRecord}</if>
+			<if test="equalEvaluation != null  and equalEvaluation != ''"> and equal_evaluation = #{equalEvaluation}</if>
+			<if test="purpose != null  and purpose != ''"> and purpose = #{purpose}</if>
+			<if test="networkSecurity != null  and networkSecurity != ''"> and network_security = #{networkSecurity}</if>
+			<if test="hospitalSafety != null  and hospitalSafety != ''"> and hospital_safety = #{hospitalSafety}</if>
+			<if test="note != null  and note != ''"> and note = #{note}</if>
+			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
+
+		</where>
+		ORDER BY  id DESC
+
+		<if test="createTimeDesc == '1'">
+			,create_time ASC
+		</if>
+
+		<if test="networkSecurityDesc == '0'">
+			,network_security DESC
+		</if>
+		<if test="networkSecurityDesc == '1'">
+			,network_security ASC
+		</if>
+
+		<if test="hospitalSafetyDesc == '0'">
+			,hospital_safety DESC
+		</if>
+		<if test="hospitalSafetyDesc == '1'">
+			,hospital_safety ASC
+		</if>
+		OFFSET #{page} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+	</select>
+
+	<select id="selectInfoSystemListTotal" parameterType="com.tdkj.tdcloud.admin.api.dto.InformationSystemDTO" resultType="integer">
+		select count(id) from information_system
+
+		<where>
+			and is_delete = 0
+			<if test="systemName != null  and systemName != ''"> and system_name like concat('%', #{systemName}, '%')</if>
+			<if test="useStatus != null  and useStatus != ''"> and use_status = #{useStatus}</if>
+			<if test="intranetIp != null  and intranetIp != ''"> and intranet_ip = #{intranetIp}</if>
+			<if test="extranetIp != null  and extranetIp != ''"> and extranet_ip = #{extranetIp}</if>
+			<if test="macAddress != null  and macAddress != ''"> and mac_address = #{macAddress}</if>
+			<if test="freeInternet != null  and freeInternet != ''"> and free_internet = #{freeInternet}</if>
+			<if test="storageLocation != null  and storageLocation != ''"> and storage_location = #{storageLocation}</if>
+			<if test="useDept != null  and useDept != ''"> and use_dept = #{useDept}</if>
+			<if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+			<if test="tcpRecord != null  and tcpRecord != ''"> and tcp_record = #{tcpRecord}</if>
+			<if test="equalRecord != null  and equalRecord != ''"> and equal_record = #{equalRecord}</if>
+			<if test="equalEvaluation != null  and equalEvaluation != ''"> and equal_evaluation = #{equalEvaluation}</if>
+			<if test="purpose != null  and purpose != ''"> and purpose = #{purpose}</if>
+			<if test="networkSecurity != null  and networkSecurity != ''"> and network_security = #{networkSecurity}</if>
+			<if test="hospitalSafety != null  and hospitalSafety != ''"> and hospital_safety = #{hospitalSafety}</if>
+			<if test="note != null  and note != ''"> and note = #{note}</if>
+			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
+
+		</where>
+
+
+	</select>
+
+	<select id="selectExportInfoSystemList" parameterType="com.tdkj.tdcloud.admin.api.dto.InformationSystemDTO" resultMap="InformationSystemResultVO">
+		<include refid="selectInformationSystemVo"/>
+		<where>
+			and is_delete = 0
+			<if test="systemName != null  and systemName != ''"> and system_name like concat('%', #{systemName}, '%')</if>
+			<if test="useStatus != null  and useStatus != ''"> and use_status = #{useStatus}</if>
+			<if test="intranetIp != null  and intranetIp != ''"> and intranet_ip = #{intranetIp}</if>
+			<if test="extranetIp != null  and extranetIp != ''"> and extranet_ip = #{extranetIp}</if>
+			<if test="macAddress != null  and macAddress != ''"> and mac_address = #{macAddress}</if>
+			<if test="freeInternet != null  and freeInternet != ''"> and free_internet = #{freeInternet}</if>
+			<if test="storageLocation != null  and storageLocation != ''"> and storage_location = #{storageLocation}</if>
+			<if test="useDept != null  and useDept != ''"> and use_dept = #{useDept}</if>
+			<if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+			<if test="tcpRecord != null  and tcpRecord != ''"> and tcp_record = #{tcpRecord}</if>
+			<if test="equalRecord != null  and equalRecord != ''"> and equal_record = #{equalRecord}</if>
+			<if test="equalEvaluation != null  and equalEvaluation != ''"> and equal_evaluation = #{equalEvaluation}</if>
+			<if test="purpose != null  and purpose != ''"> and purpose = #{purpose}</if>
+			<if test="networkSecurity != null  and networkSecurity != ''"> and network_security = #{networkSecurity}</if>
+			<if test="hospitalSafety != null  and hospitalSafety != ''"> and hospital_safety = #{hospitalSafety}</if>
+			<if test="note != null  and note != ''"> and note = #{note}</if>
+			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
+
+
+			<if test="idList !=null and idList.size()>0 ">
+				and id in
+				<foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+
+	</select>
+        
+    <insert id="insertInformationSystem" parameterType="com.tdkj.tdcloud.admin.api.entity.InformationSystem">
+        insert into information_system
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="systemName != null">system_name,</if>
+            <if test="useStatus != null">use_status,</if>
+            <if test="intranetIp != null">intranet_ip,</if>
+            <if test="extranetIp != null">extranet_ip,</if>
+            <if test="macAddress != null">mac_address,</if>
+            <if test="freeInternet != null">free_internet,</if>
+            <if test="storageLocation != null">storage_location,</if>
+            <if test="useDept != null">use_dept,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="tcpRecord != null">tcp_record,</if>
+            <if test="equalRecord != null">equal_record,</if>
+            <if test="equalEvaluation != null">equal_evaluation,</if>
+            <if test="purpose != null">purpose,</if>
+            <if test="networkSecurity != null">network_security,</if>
+            <if test="hospitalSafety != null">hospital_safety,</if>
+            <if test="note != null">note,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="systemName != null">#{systemName},</if>
+            <if test="useStatus != null">#{useStatus},</if>
+            <if test="intranetIp != null">#{intranetIp},</if>
+            <if test="extranetIp != null">#{extranetIp},</if>
+            <if test="macAddress != null">#{macAddress},</if>
+            <if test="freeInternet != null">#{freeInternet},</if>
+            <if test="storageLocation != null">#{storageLocation},</if>
+            <if test="useDept != null">#{useDept},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="tcpRecord != null">#{tcpRecord},</if>
+            <if test="equalRecord != null">#{equalRecord},</if>
+            <if test="equalEvaluation != null">#{equalEvaluation},</if>
+            <if test="purpose != null">#{purpose},</if>
+            <if test="networkSecurity != null">#{networkSecurity},</if>
+            <if test="hospitalSafety != null">#{hospitalSafety},</if>
+            <if test="note != null">#{note},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInformationSystem" parameterType="com.tdkj.tdcloud.admin.api.entity.InformationSystem">
+        update information_system
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="systemName != null">system_name = #{systemName},</if>
+            <if test="useStatus != null">use_status = #{useStatus},</if>
+            <if test="intranetIp != null">intranet_ip = #{intranetIp},</if>
+            <if test="extranetIp != null">extranet_ip = #{extranetIp},</if>
+            <if test="macAddress != null">mac_address = #{macAddress},</if>
+            <if test="freeInternet != null">free_internet = #{freeInternet},</if>
+            <if test="storageLocation != null">storage_location = #{storageLocation},</if>
+            <if test="useDept != null">use_dept = #{useDept},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="tcpRecord != null">tcp_record = #{tcpRecord},</if>
+            <if test="equalRecord != null">equal_record = #{equalRecord},</if>
+            <if test="equalEvaluation != null">equal_evaluation = #{equalEvaluation},</if>
+            <if test="purpose != null">purpose = #{purpose},</if>
+            <if test="networkSecurity != null">network_security = #{networkSecurity},</if>
+            <if test="hospitalSafety != null">hospital_safety = #{hospitalSafety},</if>
+            <if test="note != null">note = #{note},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteInfoSystemByIdList">
+        update  information_system set is_delete = 1 where id in
+		<foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+    </update>
+
+	<update id="deleteInformationSystemById" parameterType="Long">
+		update information_system set is_delete = 1 where id = #{id}
+	</update>
+
+    <delete id="deleteInformationSystemByIds" parameterType="String">
+        delete from information_system where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

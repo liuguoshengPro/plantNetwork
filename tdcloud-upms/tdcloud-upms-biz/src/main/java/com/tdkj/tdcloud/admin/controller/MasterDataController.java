@@ -89,7 +89,6 @@ public class MasterDataController
 	 * 导出excel 表格
 	 * @return excel 文件流
 	 */
-	@Inner(value = false)
 	@ResponseExcel
 	@GetMapping("/exportMasterData")
 //	@PreAuthorize("@pms.hasPermission('sys_post_export')")
@@ -117,10 +116,15 @@ public class MasterDataController
 		return masterDataService.getFileList(masterId,itemType);
 	}
 
-	@Inner(value = false)
 	@GetMapping("/updateMasterDataAllocation")
 	public R updateMasterDataAllocationStatus(Long masterId) {
 		return masterDataService.updateMasterDataAllocationStatus(masterId);
+	}
+
+	@Inner(value = false)
+	@GetMapping("/getMasterStatistics")
+	public R getMasterStatistics(String year) {
+		return masterDataService.getMasterStatistics(year);
 	}
 
 }

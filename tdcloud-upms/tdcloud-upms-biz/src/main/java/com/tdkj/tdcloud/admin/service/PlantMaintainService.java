@@ -18,8 +18,14 @@
 package com.tdkj.tdcloud.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintain;
+import com.tdkj.tdcloud.admin.api.vo.PlantMaintainVO;
+import com.tdkj.tdcloud.admin.api.vo.PostExcelVO;
 import com.tdkj.tdcloud.common.core.util.R;
+import org.springframework.validation.BindingResult;
+
+import java.util.List;
 
 /**
  * 维护信息数据
@@ -32,4 +38,6 @@ public interface PlantMaintainService extends IService<PlantMaintain> {
 	public R getPlantMaintainColumnar();
 	public R getDictItemList();
 	public R addPlantMaintain(PlantMaintain plantMaintain);
+	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult);
+	public List<PlantMaintainVO> exportPlantMaintain(PlantMaintainDTO plantMaintainDTO);
 }

@@ -18,27 +18,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="allocationTime"    column="allocation_time"    />
     </resultMap>
 
+	<resultMap type="com.tdkj.tdcloud.admin.api.vo.MasterDataVO" id="MasterDataResultVO">
+		<result property="id"    column="id"    />
+		<result property="itemType"    column="Item_type"    />
+		<result property="auditStatus"    column="audit_status"    />
+		<result property="allocationStatus"    column="allocation_status"    />
+		<result property="submitTime"    column="submit_time"    />
+		<result property="auditTime"    column="audit_time"    />
+		<result property="allocationTime"    column="allocation_time"    />
+	</resultMap>
+
     <sql id="selectMasterDataVo">
         select id, Item_type,allocation_time, create_time,audit_time,user_id,user_name, audit_status, allocation_status, submit_time, is_delete from master_data
     </sql>
 
+	<sql id="selectExportMasterDataVo">
+		select id, Item_type,allocation_time, create_time,audit_time,user_id,user_name, audit_status, allocation_status, submit_time, is_delete from master_data
+	</sql>
+
     <select id="selectMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResult">
         <include refid="selectMasterDataVo"/>
         <where>
-
+			<if test="auditType != null  and auditType != ''"> and audit_status != '1'</if>
             <if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
             <if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
             <if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
             <if test="isDelete != null "> and is_delete = #{isDelete}</if>
 			<if test="beginSubmitTime != null and beginSubmitTime != '' and endSubmitTime != null and endSubmitTime != ''"> and submit_time between #{beginSubmitTime} and #{endSubmitTime}</if>
+			<if test="beginAuditTime != null and beginAuditTime != '' and endAuditTime != null and endAuditTime != ''"> and audit_time between #{beginAuditTime} and #{endAuditTime}</if>
+			<if test="beginAllocationTime != null and beginAllocationTime != '' and endAllocationTime != null and endAllocationTime != ''"> and allocation_time between #{beginAllocationTime} and #{endAllocationTime}</if>
 
 		</where>
 		ORDER BY  create_time DESC
 		OFFSET #{page} ROWS FETCH NEXT #{pageSize} ROWS ONLY
     </select>
 
-	<select id="selectExportMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResult">
-		<include refid="selectMasterDataVo"/>
+	<select id="selectExportMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResultVO">
+		<include refid="selectExportMasterDataVo"/>
 		<where>
 
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
@@ -46,7 +62,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
 			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
 			<if test="beginSubmitTime != null and beginSubmitTime != '' and endSubmitTime != null and endSubmitTime != ''"> and submit_time between #{beginSubmitTime} and #{endSubmitTime}</if>
+			<if test="beginAuditTime != null and beginAuditTime != '' and endAuditTime != null and endAuditTime != ''"> and audit_time between #{beginAuditTime} and #{endAuditTime}</if>
+			<if test="beginAllocationTime != null and beginAllocationTime != '' and endAllocationTime != null and endAllocationTime != ''"> and allocation_time between #{beginAllocationTime} and #{endAllocationTime}</if>
 
+
+			<if test="idList !=null and idList.size()>0 ">
+				and id in
+				<foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
 		</where>
 
 	</select>
@@ -55,11 +80,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(id) from master_data
 
 		<where>
+			<if test="auditType != null  and auditType != ''"> and audit_status != '1'</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
 			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
 			<if test="beginSubmitTime != null and beginSubmitTime != '' and endSubmitTime != null and endSubmitTime != ''"> and submit_time between #{beginSubmitTime} and #{endSubmitTime}</if>
+			<if test="beginAuditTime != null and beginAuditTime != '' and endAuditTime != null and endAuditTime != ''"> and audit_time between #{beginAuditTime} and #{endAuditTime}</if>
+			<if test="beginAllocationTime != null and beginAllocationTime != '' and endAllocationTime != null and endAllocationTime != ''"> and allocation_time between #{beginAllocationTime} and #{endAllocationTime}</if>
 
 		</where>
 
@@ -72,6 +100,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectSysUserByUserId" parameterType="Long" resultType="string">
 		SELECT username FROM sys_user
 		where user_id = #{userId}
+	</select>
+
+	<select id="selectSysDept" parameterType="Long" resultType="com.tdkj.tdcloud.admin.api.entity.SysDept">
+		SELECT * FROM sys_dept
+		where parent_id != #{parentId}
+	</select>
+
+	<select id="selectSysDeptById" parameterType="Long" resultType="String">
+		SELECT name FROM sys_dept
+		where dept_id = #{deptId}
 	</select>
 
 	<select id="selectMasterDataByAuditStatus" resultMap="MasterDataResult">
@@ -150,4 +188,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+	<select id="selectNotAudit" resultType="integer">
+		SELECT count(id) FROM master_data
+		where audit_status = #{auditStatus} and Item_type = #{itemType}
+	</select>
+
+	<select id="selectAllMasterData" resultType="com.tdkj.tdcloud.admin.api.entity.MonthStatistics">
+		SELECT
+		CASE month
+		WHEN 1 THEN CONVERT(varchar(10), '一月')
+        WHEN 2 THEN CONVERT(varchar(10), '二月')
+        WHEN 3 THEN CONVERT(varchar(10), '三月')
+        WHEN 4 THEN CONVERT(varchar(10), '四月')
+        WHEN 5 THEN CONVERT(varchar(10), '五月')
+        WHEN 6 THEN CONVERT(varchar(10), '六月')
+        WHEN 7 THEN CONVERT(varchar(10), '七月')
+        WHEN 8 THEN CONVERT(varchar(10), '八月')
+        WHEN 9 THEN CONVERT(varchar(10), '九月')
+        WHEN 10 THEN CONVERT(varchar(10), '十月')
+        WHEN 11 THEN CONVERT(varchar(10), '十一月')
+        WHEN 12 THEN CONVERT(varchar(10), '十二月')
+		END AS capsMonth,
+			COALESCE(COUNT(md.id), 0) AS total
+		FROM
+			(
+				SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION
+				SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION
+				SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
+			) AS m
+				LEFT JOIN master_data AS md ON m.month = MONTH(md.submit_time)
+			AND YEAR(md.submit_time) = #{year} AND md.Item_type = #{itemType}
+		GROUP BY
+			m.month
+		ORDER BY
+			m.month;
+	</select>
 </mapper>

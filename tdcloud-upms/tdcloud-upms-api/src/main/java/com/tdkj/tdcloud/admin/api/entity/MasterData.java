@@ -30,10 +30,10 @@ public class MasterData
     private String userName;
 
     /** 提交时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:dd")
     private Date submitTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:dd")
     private Date createTime;
 
     /** 0使用1删除 */
@@ -48,10 +48,10 @@ public class MasterData
 	/** 域名 */
 	private String domainName;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:dd")
 	private Date auditTime;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:dd")
 	private Date allocationTime;
 
 }

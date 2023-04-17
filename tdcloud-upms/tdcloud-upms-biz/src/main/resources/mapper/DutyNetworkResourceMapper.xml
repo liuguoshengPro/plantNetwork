@@ -18,9 +18,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="resourceType"    column="resource_type"    />
     </resultMap>
 
+	<resultMap type="com.tdkj.tdcloud.admin.api.vo.DutyNetworkResourceVO" id="DutyResourceResult">
+		<result property="intranetIp"    column="intranet_ip"    />
+		<result property="extranetIp"    column="extranet_ip"    />
+		<result property="domainName"    column="domain_name"    />
+
+	</resultMap>
+
     <sql id="selectDutyNetworkResourceVo">
         select id, resource_name, intranet_ip,menu_type_id,resource_type, extranet_ip, domain_name, person_charge, phone, create_time, is_delete from duty_network_resource
     </sql>
+
+	<sql id="selectNetworkResourceVo">
+		select id, resource_name, intranet_ip,menu_type_id,resource_type, extranet_ip, domain_name, person_charge, phone, create_time, is_delete from duty_network_resource
+	</sql>
 
     <select id="selectDutyNetworkResourceList" parameterType="com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource" resultMap="DutyNetworkResourceResult">
         <include refid="selectDutyNetworkResourceVo"/>
@@ -42,6 +53,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectDutyNetworkByMenuTypeId" parameterType="Long" resultMap="DutyNetworkResourceResult">
 		<include refid="selectDutyNetworkResourceVo"/>
+		where menu_type_id = #{menuTypeId}
+	</select>
+
+	<select id="selectDutyNetworkByMenuTypeIdNew" parameterType="Long" resultMap="DutyResourceResult">
+		<include refid="selectNetworkResourceVo"/>
 		where menu_type_id = #{menuTypeId}
 	</select>
         

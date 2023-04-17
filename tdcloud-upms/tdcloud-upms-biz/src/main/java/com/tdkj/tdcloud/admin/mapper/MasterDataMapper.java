@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.tdkj.tdcloud.admin.api.dto.MasterDataDto;
 import com.tdkj.tdcloud.admin.api.entity.MasterData;
+import com.tdkj.tdcloud.admin.api.entity.MonthStatistics;
+import com.tdkj.tdcloud.admin.api.entity.SysDept;
 import com.tdkj.tdcloud.admin.api.entity.SysFile;
+import com.tdkj.tdcloud.admin.api.vo.MasterDataVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,6 +28,8 @@ public interface MasterDataMapper
      */
     public MasterData selectMasterDataById(Long id);
     public String selectSysUserByUserId(@Param("userId")Long userId);
+    public List<SysDept> selectSysDept(@Param("parentId")Long parentId);
+    public String selectSysDeptById(@Param("deptId")Long deptId);
     public MasterData selectMasterDataByAuditStatus(@Param("userId")Long userId,@Param("itemType")String itemType);
     public List<SysFile> selectFileByMasterId(@Param("masterId")Long masterId, @Param("itemType")String itemType);
 
@@ -35,7 +40,7 @@ public interface MasterDataMapper
      * @return 主数据集合
      */
     public List<MasterData> selectMasterDataList(MasterDataDto masterDataDto);
-    public List<MasterData> selectExportMasterDataList(MasterDataDto masterDataDto);
+    public List<MasterDataVO> selectExportMasterDataList(MasterDataDto masterDataDto);
     public int selectMasterDataListTotal(MasterDataDto masterDataDto);
 
     /**
@@ -71,4 +76,6 @@ public interface MasterDataMapper
      * @return 结果
      */
     public int deleteMasterDataByIds(String[] ids);
+    public int selectNotAudit(@Param("auditStatus") String auditStatus,@Param("itemType")String itemType);
+    public List<MonthStatistics> selectAllMasterData(@Param("year") String year,@Param("itemType")String itemType);
 }

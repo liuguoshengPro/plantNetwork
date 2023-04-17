@@ -16,15 +16,24 @@
  */
 package com.tdkj.tdcloud.admin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO;
 import com.tdkj.tdcloud.admin.api.entity.DictItem;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintain;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintainChart;
+import com.tdkj.tdcloud.admin.api.entity.SysPost;
+import com.tdkj.tdcloud.admin.api.vo.PlantMaintainVO;
+import com.tdkj.tdcloud.admin.api.vo.PostExcelVO;
 import com.tdkj.tdcloud.admin.mapper.PlantMaintainMapper;
 import com.tdkj.tdcloud.admin.service.PlantMaintainService;
+import com.tdkj.tdcloud.common.core.exception.ErrorCodes;
+import com.tdkj.tdcloud.common.core.util.MsgUtils;
 import com.tdkj.tdcloud.common.core.util.R;
+import com.tdkj.tdcloud.common.excel.vo.ErrorMessage;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -252,5 +261,39 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 	@Override
 	public R addPlantMaintain(PlantMaintain plantMaintain) {
 		return R.ok(plantMaintainMapper.insertPlantMaintain(plantMaintain));
+	}
+
+	@Override
+	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult) {
+		// 通用校验获取失败的数据
+		List<ErrorMessage> errorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
+
+
+		// 执行数据插入操作 组装
+		for (PlantMaintainVO excel : excelVOList) {
+			excel.setCreateTime(new Date());
+			plantMaintainMapper.insertPlantMaintainVO(excel);
+
+		}
+		if (CollUtil.isNotEmpty(errorMessageList)) {
+			return R.failed(errorMessageList);
+		}
+		return R.ok();
+	}
+
+	@Override
+	public List<PlantMaintainVO> exportPlantMaintain(PlantMaintainDTO plantMaintainDTO) {
+
+		List<PlantMaintainVO> plantMaintainVOList = plantMaintainMapper.selectExportPlantMaintain(plantMaintainDTO);
+		if (plantMaintainVOList.size()>0){
+			for (PlantMaintainVO pm:plantMaintainVOList){
+				String itemLabel = plantMaintainMapper.selectDictItemLabel(pm.getMaintainProblem());
+				pm.setMaintainProblem(itemLabel);
+			}
+		}
+		if (plantMaintainVOList.size()==0){
+			return PlantMaintainVO.getEmptyData();
+		}
+		return plantMaintainVOList;
 	}
 }

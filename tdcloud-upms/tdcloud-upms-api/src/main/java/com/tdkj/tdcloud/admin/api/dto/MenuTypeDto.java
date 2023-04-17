@@ -67,6 +67,28 @@ public class MenuTypeDto
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createTime;
 
+	/** 申请人姓名 */
+	private String userName;
+
+	/** 申请人部门 */
+	private String userDept;
+
+	/** 申请日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date applyTime;
+
+	/** 申请人手机 */
+	private String userPhone;
+
+	/** DNS域名 */
+	private String dnsDomain;
+
+	/** ip地址 */
+	private String ipAddress;
+
+	/** 网站用途 */
+	private String siteUsage;
+
 	private List<DutyApplyReason> dutyApplyReasonList = new ArrayList<>();
 	private List<DutyNetworkResource> dutyNetworkResourceList = new ArrayList<>();
 

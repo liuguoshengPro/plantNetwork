@@ -1,7 +1,9 @@
 package com.tdkj.tdcloud.admin.mapper;
 
 import com.tdkj.tdcloud.admin.api.dto.MenuTypeDto;
+import com.tdkj.tdcloud.admin.api.entity.ChargeStandard;
 import com.tdkj.tdcloud.admin.api.entity.MenuType;
+import com.tdkj.tdcloud.admin.api.entity.UseDescription;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,6 +27,8 @@ public interface MenuTypeMapper
     public MenuType selectMenuTypeById(Long id);
     public MenuType selectMenuTypeByMasterId(@Param("masterId") Long masterId,@Param("applyType")String applyType);
     public int selectMenuTypeByMasterIdTotal(@Param("masterId") Long masterId);
+    public int updateChargeStandard(ChargeStandard chargeStandard);
+    public List<ChargeStandard> selectChargeStandardList();
 
     /**
      * 查询主数据下两张数据列表
@@ -41,6 +45,9 @@ public interface MenuTypeMapper
      * @return 结果
      */
     public int insertMenuType(MenuTypeDto menuType);
+    public int insertUseDescription(UseDescription useDescription);
+    public UseDescription selectUseDescriptionByItemType(String itemType);
+    public UseDescription selectUseDescriptionById(Long id);
 
     /**
      * 修改主数据下两张数据
@@ -49,6 +56,7 @@ public interface MenuTypeMapper
      * @return 结果
      */
     public int updateMenuType(MenuTypeDto menuType);
+    public int updateUseDescription(UseDescription useDescription);
 
     /**
      * 删除主数据下两张数据
