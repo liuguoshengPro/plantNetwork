@@ -1,7 +1,11 @@
 package com.tdkj.tdcloud.admin.service.impl;
 
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 import cn.hutool.core.convert.Convert;
 import com.tdkj.tdcloud.admin.api.dto.DomainNameApplyDTO;
@@ -10,6 +14,8 @@ import com.tdkj.tdcloud.admin.api.dto.MenuTypeDto;
 import com.tdkj.tdcloud.admin.api.entity.*;
 import com.tdkj.tdcloud.admin.mapper.*;
 import com.tdkj.tdcloud.admin.service.MenuTypeService;
+import com.tdkj.tdcloud.admin.util.ChineseNumber;
+import com.tdkj.tdcloud.admin.util.MoneyToChineseUtil;
 import com.tdkj.tdcloud.common.core.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,6 +114,15 @@ public class MenuTypeServiceImpl implements MenuTypeService
 				}
 				if (menuTypeDto.getDutyNetworkResourceList().size()>0){
 					for (DutyNetworkResource dnr:menuTypeDto.getDutyNetworkResourceList()){
+						if (dnr.getIntranetIp()==null){
+							dnr.setIntranetIp("");
+						}
+						if (dnr.getExtranetIp()==null){
+							dnr.setExtranetIp("");
+						}
+						if (dnr.getDomainName()==null){
+							dnr.setDomainName("");
+						}
 						if (dnr.getId()==null){
 							dnr.setCreateTime(date);
 							dnr.setMenuTypeId(menuTypeDto.getId());
@@ -240,6 +255,7 @@ public class MenuTypeServiceImpl implements MenuTypeService
 	public R saveMenuApplyDns(MenuTypeDto menuTypeDto) {
 		if (menuTypeDto.getId() == null) {
 			menuTypeDto.setCreateTime(new Date());
+			menuTypeDto.setApplyTime(new Date());
 			int i = menuTypeMapper.insertMenuType(menuTypeDto);
 			if (i == 1) {
 				return R.ok("添加成功");
@@ -304,4 +320,34 @@ public class MenuTypeServiceImpl implements MenuTypeService
 	public R updateChargeStandard(ChargeStandard chargeStandard) {
 		return R.ok(menuTypeMapper.updateChargeStandard(chargeStandard),"修改成功");
 	}
+
+	@Override
+	public R getChargeStandardCalculate(MenuTypeDto menuTypeDto) {
+		Map<String,Object> map = new HashMap<>();
+		double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(menuTypeDto.getItemType());
+		BigDecimal cs = new BigDecimal(chargeStandard);//服务费
+		SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd");
+//		String startDateStr = time.format(menuTypeDto.getStartTime());
+//		String endDateStr = time.format(menuTypeDto.getEndTime());
+//		String startDateStr = "2023-01-01";
+//		String endDateStr = "2023-04-05";
+		LocalDate startDate = LocalDate.parse(menuTypeDto.getStartTime());
+		LocalDate endDate = LocalDate.parse(menuTypeDto.getEndTime());
+
+		long monthsBetween = ChronoUnit.MONTHS.between(startDate.withDayOfMonth(1), endDate.withDayOfMonth(1));
+		if (monthsBetween==0){
+			return R.failed("不能低于一个月");
+		}
+		BigDecimal paymentMethod = cs.multiply(new BigDecimal(monthsBetween)).multiply(new BigDecimal(menuTypeDto.getPlatformNum()));
+		System.out.println("----------------"+paymentMethod);
+
+		String moneyToChinese = MoneyToChineseUtil.convert(MoneyToChineseUtil.moneyFormat(String.valueOf(paymentMethod)));
+		System.out.println("--------------大写"+moneyToChinese);
+		map.put("chargeStandard",cs);
+		map.put("paymentMethod",paymentMethod);
+		map.put("paymentUppercase",moneyToChinese);
+		map.put("serviceCharge",paymentMethod);
+		return R.ok(map,"费用数据");
+	}
+
 }

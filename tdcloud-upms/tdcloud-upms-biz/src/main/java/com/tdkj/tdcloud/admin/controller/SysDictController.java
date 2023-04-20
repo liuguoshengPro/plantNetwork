@@ -34,10 +34,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -59,6 +61,9 @@ public class SysDictController {
 	private final SysDictService sysDictService;
 
 	private final SysDictItemService sysDictItemService;
+
+	@Resource
+	private RedisTemplate redisTemplate;
 
 	/**
 	 * 通过ID查询字典信息
@@ -157,6 +162,7 @@ public class SysDictController {
 	@PostMapping("/item")
 	@CacheEvict(value = CacheConstants.DICT_DETAILS, allEntries = true)
 	public R save(@RequestBody SysDictItem sysDictItem) {
+		redisTemplate.delete("maintainTypeList");
 		return R.ok(sysDictItemService.save(sysDictItem));
 	}
 
@@ -168,6 +174,7 @@ public class SysDictController {
 	@SysLog("修改字典项")
 	@PutMapping("/item")
 	public R updateById(@RequestBody SysDictItem sysDictItem) {
+		redisTemplate.delete("maintainTypeList");
 		return sysDictItemService.updateDictItem(sysDictItem);
 	}
 
@@ -179,6 +186,7 @@ public class SysDictController {
 	@SysLog("删除字典项")
 	@DeleteMapping("/item/{id}")
 	public R removeDictItemById(@PathVariable Long id) {
+		redisTemplate.delete("maintainTypeList");
 		return sysDictItemService.removeDictItem(id);
 	}
 

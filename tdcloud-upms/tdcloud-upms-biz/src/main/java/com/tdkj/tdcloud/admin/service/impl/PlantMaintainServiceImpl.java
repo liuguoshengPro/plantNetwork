@@ -17,7 +17,11 @@
 package com.tdkj.tdcloud.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO;
 import com.tdkj.tdcloud.admin.api.entity.DictItem;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintain;
@@ -31,6 +35,7 @@ import com.tdkj.tdcloud.common.core.exception.ErrorCodes;
 import com.tdkj.tdcloud.common.core.util.MsgUtils;
 import com.tdkj.tdcloud.common.core.util.R;
 import com.tdkj.tdcloud.common.excel.vo.ErrorMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -210,6 +215,91 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 			year.add(year12);
 			total = total + year12.getNum();
 		}
+
+		PlantMaintainChart year13 = plantMaintainMapper.selectPmYear(13);
+		if (year13==null){
+			PlantMaintainChart plantMaintainChart13 = new PlantMaintainChart();
+			plantMaintainChart13.setYearData(String.valueOf(Integer.valueOf(systemTime) -13));
+			plantMaintainChart13.setNum(0);
+			year.add(plantMaintainChart13);
+			total = total + plantMaintainChart13.getNum();
+		}else {
+			year.add(year13);
+			total = total + year13.getNum();
+		}
+
+		PlantMaintainChart year14 = plantMaintainMapper.selectPmYear(14);
+		if (year14==null){
+			PlantMaintainChart plantMaintainChart14 = new PlantMaintainChart();
+			plantMaintainChart14.setYearData(String.valueOf(Integer.valueOf(systemTime) -14));
+			plantMaintainChart14.setNum(0);
+			year.add(plantMaintainChart14);
+			total = total + plantMaintainChart14.getNum();
+		}else {
+			year.add(year14);
+			total = total + year14.getNum();
+		}
+
+		PlantMaintainChart year15 = plantMaintainMapper.selectPmYear(15);
+		if (year15==null){
+			PlantMaintainChart plantMaintainChart15 = new PlantMaintainChart();
+			plantMaintainChart15.setYearData(String.valueOf(Integer.valueOf(systemTime) -15));
+			plantMaintainChart15.setNum(0);
+			year.add(plantMaintainChart15);
+			total = total + plantMaintainChart15.getNum();
+		}else {
+			year.add(year15);
+			total = total + year15.getNum();
+		}
+
+		PlantMaintainChart year16 = plantMaintainMapper.selectPmYear(16);
+		if (year16==null){
+			PlantMaintainChart plantMaintainChart16 = new PlantMaintainChart();
+			plantMaintainChart16.setYearData(String.valueOf(Integer.valueOf(systemTime) -16));
+			plantMaintainChart16.setNum(0);
+			year.add(plantMaintainChart16);
+			total = total + plantMaintainChart16.getNum();
+		}else {
+			year.add(year16);
+			total = total + year16.getNum();
+		}
+
+		PlantMaintainChart year17 = plantMaintainMapper.selectPmYear(17);
+		if (year17==null){
+			PlantMaintainChart plantMaintainChart17 = new PlantMaintainChart();
+			plantMaintainChart17.setYearData(String.valueOf(Integer.valueOf(systemTime) -17));
+			plantMaintainChart17.setNum(0);
+			year.add(plantMaintainChart17);
+			total = total + plantMaintainChart17.getNum();
+		}else {
+			year.add(year17);
+			total = total + year17.getNum();
+		}
+
+		PlantMaintainChart year18 = plantMaintainMapper.selectPmYear(18);
+		if (year18==null){
+			PlantMaintainChart plantMaintainChart18 = new PlantMaintainChart();
+			plantMaintainChart18.setYearData(String.valueOf(Integer.valueOf(systemTime) -18));
+			plantMaintainChart18.setNum(0);
+			year.add(plantMaintainChart18);
+			total = total + plantMaintainChart18.getNum();
+		}else {
+			year.add(year18);
+			total = total + year18.getNum();
+		}
+
+		PlantMaintainChart year19 = plantMaintainMapper.selectPmYear(19);
+		if (year19==null){
+			PlantMaintainChart plantMaintainChart19 = new PlantMaintainChart();
+			plantMaintainChart19.setYearData(String.valueOf(Integer.valueOf(systemTime) -19));
+			plantMaintainChart19.setNum(0);
+			year.add(plantMaintainChart19);
+			total = total + plantMaintainChart19.getNum();
+		}else {
+			year.add(year19);
+			total = total + year19.getNum();
+		}
+
 		List<DictItem> dictItemList = plantMaintainMapper.selectDictItemList("maintain_type");
 		if (dictItemList.size()>0){
 			for (DictItem dictItem :dictItemList){
@@ -217,29 +307,25 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 				dictItem.setNum(i);
 			}
 		}
-//		int i1 = plantMaintainMapper.selectMaintainProblemTotal("1");
-//		int i2 = plantMaintainMapper.selectMaintainProblemTotal("2");
-//		int i3 = plantMaintainMapper.selectMaintainProblemTotal("3");
-//		int i4 = plantMaintainMapper.selectMaintainProblemTotal("4");
-//		int i5 = plantMaintainMapper.selectMaintainProblemTotal("5");
-//		int i6 = plantMaintainMapper.selectMaintainProblemTotal("6");
-//		int i7 = plantMaintainMapper.selectMaintainProblemTotal("7");
-//		int i8 = plantMaintainMapper.selectMaintainProblemTotal("8");
-//		int i0 = plantMaintainMapper.selectMaintainProblemTotal("0");
-//		map.put("networkFault",i1);
-//		map.put("virusTrojan",i2);
-//		map.put("fileLoss",i3);
-//		map.put("mailProblem",i4);
-//		map.put("officeSoftware",i5);
-//		map.put("softwarePiracy",i6);
-//		map.put("arpProblem",i7);
-//		map.put("hardwareProblem",i8);
-//		map.put("otherProblem",i0);
-
+		Collections.reverse(year);
 		mapTotal.put("year",year);
-		mapTotal.put("total",total);
+		mapTotal.put("total",plantMaintainMapper.selectPlantMaintainListTotal(new PlantMaintain()));
 		mapTotal.put("maintainProblem",dictItemList);
 		return R.ok(mapTotal,"成功");
+	}
+
+	/**
+	 * 删除
+	 * @param idList
+	 * @return
+	 */
+	@Override
+	public R deletePlantMaintain(List<Long> idList) {
+		if (idList.size()==0){
+			return R.failed("id不能为空");
+		}
+		plantMaintainMapper.deletePlantMaintain(idList);
+		return R.ok();
 	}
 
 	@Override
@@ -268,9 +354,14 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 		// 通用校验获取失败的数据
 		List<ErrorMessage> errorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
 
-
+		List<DictItem> maintain_type = plantMaintainMapper.selectDictItemList("maintain_type");
 		// 执行数据插入操作 组装
 		for (PlantMaintainVO excel : excelVOList) {
+			for (DictItem di :maintain_type){
+				if (di.getLabel().equals(excel.getMaintainProblem())){
+					excel.setMaintainProblem(di.getValue());
+				}
+			}
 			excel.setCreateTime(new Date());
 			plantMaintainMapper.insertPlantMaintainVO(excel);
 
@@ -295,5 +386,34 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 			return PlantMaintainVO.getEmptyData();
 		}
 		return plantMaintainVOList;
+	}
+
+	@Override
+	public R getPlantMaintainList(Page page, PlantMaintainDTO plantMaintainDTO) {
+		Map<String,Object> map = new HashMap<>();
+		QueryWrapper<PlantMaintain> wrapper = new QueryWrapper<>();
+		wrapper.like(StringUtils.isNotBlank(plantMaintainDTO.getMaintainProblem()), "maintain_problem", plantMaintainDTO.getMaintainProblem());
+
+		//日期戳
+		if (ArrayUtil.isNotEmpty(plantMaintainDTO.getMaintainTime())) {
+			wrapper.ge("maintain_time", plantMaintainDTO.getMaintainTime()[0]).le("maintain_time", plantMaintainDTO.getMaintainTime()[1]);
+		}
+
+		wrapper.eq(StringUtils.isNotBlank(plantMaintainDTO.getIsSolve()), "is_solve", plantMaintainDTO.getIsSolve());
+		wrapper.like(StringUtils.isNotBlank(plantMaintainDTO.getMaintainUnit()), "maintain_unit", plantMaintainDTO.getMaintainUnit());
+		wrapper.orderByDesc("id");
+
+		Page page1 = baseMapper.selectPage(page, wrapper);
+		List<PlantMaintain> plantMaintainList = page1.getRecords();
+		if (plantMaintainList.size()>0){
+			for (PlantMaintain pm : plantMaintainList){
+				String label = plantMaintainMapper.selectDictItemLabel(pm.getMaintainProblem());
+				pm.setMaintainProblem(label);
+			}
+		}
+
+		map.put("data",page1);
+
+		return R.ok(map,"数据");
 	}
 }

@@ -17,6 +17,7 @@
 
 package com.tdkj.tdcloud.admin.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tdkj.tdcloud.admin.api.dto.PlantMaintainDTO;
 import com.tdkj.tdcloud.admin.api.entity.PlantMaintain;
@@ -36,8 +37,11 @@ import java.util.List;
 public interface PlantMaintainService extends IService<PlantMaintain> {
 
 	public R getPlantMaintainColumnar();
+	public R deletePlantMaintain(List<Long> idList);
 	public R getDictItemList();
 	public R addPlantMaintain(PlantMaintain plantMaintain);
 	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult);
 	public List<PlantMaintainVO> exportPlantMaintain(PlantMaintainDTO plantMaintainDTO);
+
+	R getPlantMaintainList(Page page, PlantMaintainDTO plantMaintainDTO);
 }

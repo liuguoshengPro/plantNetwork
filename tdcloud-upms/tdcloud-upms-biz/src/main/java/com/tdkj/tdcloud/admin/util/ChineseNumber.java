@@ -107,6 +107,11 @@ public class ChineseNumber {
 		}
 		return sb.toString();
 	}
+
+	public static void main(String[] args) {
+		String numberStr = getNumberStr(13213);
+		System.out.println("--------------"+numberStr);
+	}
 }
 
 

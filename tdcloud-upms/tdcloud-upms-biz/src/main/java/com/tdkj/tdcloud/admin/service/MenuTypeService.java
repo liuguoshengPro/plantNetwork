@@ -30,4 +30,6 @@ public interface MenuTypeService
     R getUseDescription(String itemType);
     R selectChargeStandardList();
     R updateChargeStandard(ChargeStandard chargeStandard);
+
+    R getChargeStandardCalculate(MenuTypeDto menuTypeDto);
 }

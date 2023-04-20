@@ -224,4 +224,12 @@ public class SysUserController {
 
 	}
 
+	@Inner(value = false)
+	@PostMapping("/updateUserPassword")
+	public R updateUserPassword(@RequestBody SysUser sysUser){
+//		return userService.sendVerificationCode(email);
+		return userService.updateUserPassword(sysUser);
+
+	}
+
 }

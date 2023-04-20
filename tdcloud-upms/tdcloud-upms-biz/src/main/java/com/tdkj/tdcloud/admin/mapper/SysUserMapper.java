@@ -65,6 +65,7 @@ public interface SysUserMapper extends TdcloudBaseMapper<SysUser> {
 	 */
 	UserVO getUserVoById(Long id);
 	int getUserVoByEmail(String username);
+	SysUser getSysUserByEmail(String username);
 
 	/**
 	 * 查询用户列表

@@ -65,7 +65,7 @@ public class MenuTypeController
 
 	/**
 	 * DNS域名保存
-	 * @param domainNameApplyDTO
+	 * @param
 	 * @return
 	 */
 	@PostMapping("/saveMenuApplyDns")
@@ -109,5 +109,11 @@ public class MenuTypeController
 	@PostMapping("/updateChargeStandard")
 	public R updateChargeStandard(@RequestBody ChargeStandard chargeStandard){
 		return menuTypeService.updateChargeStandard(chargeStandard);
+	}
+
+	@Inner(value = false)
+	@GetMapping("/getChargeStandardCalculate")
+	public R getChargeStandardCalculate(MenuTypeDto menuTypeDto){
+		return menuTypeService.getChargeStandardCalculate(menuTypeDto);
 	}
 }

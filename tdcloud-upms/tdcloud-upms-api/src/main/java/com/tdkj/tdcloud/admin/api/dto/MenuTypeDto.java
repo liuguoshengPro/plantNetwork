@@ -46,11 +46,11 @@ public class MenuTypeDto
 
     /** 服务开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date startTime;
+    private String startTime;
 
     /** 服务结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date endTime;
+    private String endTime;
 
     /** 收费标准 */
     private BigDecimal chargeStandard;

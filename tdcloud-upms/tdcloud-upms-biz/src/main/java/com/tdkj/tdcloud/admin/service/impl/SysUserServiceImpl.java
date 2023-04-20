@@ -519,17 +519,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Override
 	public R userRegister(SysUser sysUser) {
 
-		int i1 = sysUserMapper.getUserVoByEmail(sysUser.getUsername());
-		if (i1==1){
-			return R.failed("邮箱已被注册");
-		}
 		String code = (String)redisTemplate.opsForValue().get(sysUser.getToEmail() + "register");
 		logger.info("-------------------------"+code);
 		if (!sysUser.getCode().equals(code)){
 			return R.failed("验证码错误");
 		}
 		if (isValidPassword(sysUser.getPassword())) {
-			logger.info("密码不符合要求"+sysUser.getPassword());
+			logger.info("密码符合要求");
 		} else {
 			return R.failed("密码不符合要求");
 		}
@@ -550,10 +546,40 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		return R.failed("注册失败");
 	}
 
+	@Transactional
+	@Override
+	public R updateUserPassword(SysUser sysUser) {
+		SysUser sysUserByEmail = sysUserMapper.getSysUserByEmail(sysUser.getToEmail());
+
+		String code = (String)redisTemplate.opsForValue().get(sysUser.getToEmail() + "forgetPassword");
+		if (!sysUser.getCode().equals(code)){
+			return R.failed("验证码错误");
+		}
+		if (isValidPassword(sysUser.getPassword())) {
+			logger.info("密码符合要求");
+		} else {
+			return R.failed("密码不符合要求");
+		}
+		sysUser.setPassword(ENCODER.encode(sysUser.getPassword()));
+		sysUser.setUsername(sysUser.getToEmail());
+		sysUser.setUserId(sysUserByEmail.getUserId());
+		int i = baseMapper.updateById(sysUser);
+
+//		Long roleId = sysUserRoleMapper.selectRoleId("GENERAL_USER");
+//		SysUserRole sysUserRole = new SysUserRole();
+//		sysUserRole.setUserId(sysUser.getUserId());
+//		sysUserRole.setRoleId(roleId);
+//		int i = sysUserRoleMapper.insertUserId(sysUserRole);
+		if (i==1){
+			return R.ok("修改成功");
+		}
+		return R.failed("修改失败");
+	}
+
 
 	public static boolean isValidPassword(String password) {
 		// 密码必须包含大写字母、小写字母、数字和特殊符号
-		String pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+		String pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
 		return password.matches(pattern);
 	}
 

@@ -5,7 +5,7 @@ import com.tdkj.tdcloud.common.core.util.R;
 
 public interface PlantMailService {
 
-	public void sendSimpleMail(EmailSender emailSender);
+	public R sendSimpleMail(EmailSender emailSender);
 
 	//public R userRegister(EmailSender emailSender);
 }

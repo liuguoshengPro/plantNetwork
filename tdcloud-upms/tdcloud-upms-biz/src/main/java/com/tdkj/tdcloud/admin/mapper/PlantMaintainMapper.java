@@ -46,6 +46,7 @@ public interface PlantMaintainMapper extends TdcloudBaseMapper<PlantMaintain> {
 	public PlantMaintain selectPlantMaintainById(Long id);
 	public List<DictItem> selectDictItemList(@Param("dataType")String dataType);
 	public String selectDictItemLabel(@Param("itemValue")String itemValue);
+	public List<String> selectDictItemLabelList();
 
 	public PlantMaintainChart selectPmThisYear();
 	public PlantMaintainChart selectPmYear(Integer figure);
@@ -86,6 +87,7 @@ public interface PlantMaintainMapper extends TdcloudBaseMapper<PlantMaintain> {
 	 * @return 结果
 	 */
 	public int deletePlantMaintainById(Long id);
+	public int deletePlantMaintain(@Param("idList") List<Long> idList);
 
 	/**
 	 * 批量删除维护信息数据

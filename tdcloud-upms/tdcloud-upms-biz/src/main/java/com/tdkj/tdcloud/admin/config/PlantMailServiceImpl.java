@@ -1,6 +1,8 @@
 package com.tdkj.tdcloud.admin.config;
 
 import com.tdkj.tdcloud.admin.api.entity.EmailSender;
+import com.tdkj.tdcloud.admin.api.entity.SysUser;
+import com.tdkj.tdcloud.admin.mapper.SysUserMapper;
 import com.tdkj.tdcloud.admin.service.PlantMailService;
 import com.tdkj.tdcloud.common.core.util.R;
 import org.slf4j.Logger;
@@ -42,6 +44,9 @@ public class PlantMailServiceImpl implements PlantMailService {
 	@Resource
 	private RedisTemplate redisTemplate;
 
+	@Resource
+	private SysUserMapper sysUserMapper;
+
 	/**
 	 * 发送文本邮件
 	 * @param to
@@ -57,7 +62,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 	}
 
 	@Override
-	public void sendSimpleMail(EmailSender emailSender) {
+	public R sendSimpleMail(EmailSender emailSender) {
 
 		sender.setJavaMailProperties(pro);
 
@@ -75,6 +80,10 @@ public class PlantMailServiceImpl implements PlantMailService {
 			SimpleDateFormat m = new SimpleDateFormat("MM");
 			SimpleDateFormat d = new SimpleDateFormat("dd");
 			if ("register".equals(emailSender.getEmailType())){
+				int i1 = sysUserMapper.getUserVoByEmail(emailSender.getToEmail());
+				if (i1==1){
+					return R.failed("邮箱已被注册");
+				}
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
 						"您在中国科学院昆明植物研究所一体化云服务平台的注册验证码为%s，请前往服务平台完成注册验证，谢谢！\n" +
 						"此邮件由系统自动发出,请勿直接回复。\n" +
@@ -86,6 +95,24 @@ public class PlantMailServiceImpl implements PlantMailService {
 				redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
 
 			}
+
+			if ("forgetPassword".equals(emailSender.getEmailType())){
+				SysUser sysUserByEmail = sysUserMapper.getSysUserByEmail(emailSender.getToEmail());
+				if (sysUserByEmail==null){
+					return R.failed("邮箱不存在");
+				}
+				String textContent = "亲爱的"+sysUserByEmail.getName()+", 您好！\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台的验证码为%s，请前往服务平台完成密码修改，谢谢！\n" +
+						"此邮件由系统自动发出,请勿直接回复。\n" +
+						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +
+						"感谢您的访问,祝您使用愉快!\n" +
+						"科技信息中心\n" +
+						""+y.format(currentDate)+"年"+m.format(currentDate)+"月"+d.format(currentDate)+"日";
+				helper.setText(String.format(textContent, num)); // 内容
+				redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
+
+			}
+
 			if ("applyAgree".equals(emailSender.getEmailType())){
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
 						"您在中国科学院昆明植物研究所一体化云服务平台申请的云服务器已经审核通过，请前往服务平台打印服务申请书，签字后送至科技信息中心307室，谢谢！\n" +
@@ -117,7 +144,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 			logger.error("发送简单邮件时发生异常！", e);
 			e.printStackTrace();
 		}
-
+		return R.ok("发送成功");
 	}
 
 //	@Override

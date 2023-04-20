@@ -132,4 +132,5 @@ public interface SysUserService extends IService<SysUser> {
 
 
 	public R userRegister(SysUser sysUser);
+	public R updateUserPassword(SysUser sysUser);
 }

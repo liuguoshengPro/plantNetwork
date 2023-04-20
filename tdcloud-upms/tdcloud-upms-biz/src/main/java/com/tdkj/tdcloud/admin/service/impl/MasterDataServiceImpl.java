@@ -2,6 +2,7 @@ package com.tdkj.tdcloud.admin.service.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,11 +73,13 @@ public class MasterDataServiceImpl implements MasterDataService {
 		Long userId = SecurityUtils.getUser().getId();
 		masterData.setUserId(userId);
 		masterData.setUserName(userName);
+
 		MasterData masterData2 = masterDataMapper.selectMasterDataByAuditStatus(userId, masterData.getItemType());
 		if ("cloud".equals(masterData.getItemType())) {
 			if (masterData2 != null) {
 
-
+				double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(masterData.getItemType());
+				BigDecimal cs = new BigDecimal(chargeStandard);//服务费
 				MenuType menuType = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "safe");
 				//MenuType menuType1 = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "safe");
 				if (menuType != null) {
@@ -92,6 +95,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 					agreement.setAgreementResourceList(agreementResourceList);
 					agreement.setAgreementListList(agreementListList);
 				}
+				map.put("chargeStandard", cs);
 				map.put("masterData2", masterData2);
 				map.put("menuType", menuType);
 				map.put("agreement", agreement);
@@ -100,7 +104,8 @@ public class MasterDataServiceImpl implements MasterDataService {
 		}
 		if ("idc".equals(masterData.getItemType())) {
 			if (masterData2 != null) {
-
+				double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(masterData.getItemType());
+				BigDecimal cs = new BigDecimal(chargeStandard);//服务费
 				MenuType idcDuty = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "idcSafe");
 				//MenuType menuType1 = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "safe");
 				if (idcDuty != null) {
@@ -116,6 +121,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 					idcAgreement.setAgreementResourceList(agreementResourceList);
 					idcAgreement.setAgreementListList(agreementListList);
 				}
+				map.put("chargeStandard", cs);
 				map.put("masterData2", masterData2);
 				map.put("idcDuty", idcDuty);
 				map.put("idcAgreement", idcAgreement);
@@ -160,6 +166,12 @@ public class MasterDataServiceImpl implements MasterDataService {
 		int i = masterDataMapper.insertMasterData(masterData);
 		if (i == 1) {
 			MasterData masterData1 = masterDataMapper.selectMasterDataById(masterData.getId());
+			Double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(masterData1.getItemType());
+			BigDecimal cs = new BigDecimal(0);
+			if (chargeStandard!=null){
+				 cs = new BigDecimal(chargeStandard);//服务费
+			}
+			map.put("chargeStandard", cs);
 			map.put("masterData2", masterData1);
 			return R.ok(map, "添加成功");
 		}
@@ -527,7 +539,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 			if (menuType != null) {
 				dataMap.put("userName", menuType.getUserName());
 				dataMap.put("deptName", masterDataMapper.selectSysDeptById(Long.valueOf(menuType.getUserDept())));
-				dataMap.put("applyTime", time.format(menuType.getApplyTime()));
+				dataMap.put("applyTime", time.format(menuType.getCreateTime()));
 				dataMap.put("userPhone", menuType.getUserPhone());
 				dataMap.put("dnsDomain", menuType.getDnsDomain());
 				dataMap.put("ipAddress", menuType.getIpAddress());
@@ -537,7 +549,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 				String pdfFileName = realPath + "dns.pdf";
 
-				freemarkerBase.word2pdf(dataMap, response, "DomainType.ftl", wordFileName, pdfFileName);
+				freemarkerBase.word2pdf(dataMap, response, "DomainTypeNew.ftl", wordFileName, pdfFileName);
 			}
 		}
 	}

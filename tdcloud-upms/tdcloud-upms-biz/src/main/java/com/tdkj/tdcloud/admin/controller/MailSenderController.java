@@ -2,6 +2,7 @@ package com.tdkj.tdcloud.admin.controller;
 
 import com.tdkj.tdcloud.admin.api.entity.EmailSender;
 import com.tdkj.tdcloud.admin.service.PlantMailService;
+import com.tdkj.tdcloud.common.core.util.R;
 import com.tdkj.tdcloud.common.security.annotation.Inner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +23,9 @@ public class MailSenderController {
 
 	@Inner(value = false)
 	@PostMapping("/getEmailCode")
-	public void getEmailCode(@RequestBody EmailSender emailSender){
+	public R getEmailCode(@RequestBody EmailSender emailSender){
 //		return userService.sendVerificationCode(email);
 //		userService.sendSimpleMail(email, "test simple mail2", " 邮件收到了吗");
-		qqMailService.sendSimpleMail(emailSender);
+		return qqMailService.sendSimpleMail(emailSender);
 	}
 }

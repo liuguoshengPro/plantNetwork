@@ -102,10 +102,16 @@
 		where  dict_type = 'maintain_type' and item_value = #{itemValue}
 	</select>
 
+	<select id="selectDictItemLabelList" resultType="string">
+		select label from sys_dict_item
+		where  dict_type = 'maintain_type'
+	</select>
+
 	<select id="selectPlantMaintainById" parameterType="Long" resultMap="plantMaintainMap">
 		<include refid="selectPlantMaintainVo"/>
 		where id = #{id}
 	</select>
+
 	<select id="selectPmThisYear" resultType="com.tdkj.tdcloud.admin.api.entity.PlantMaintainChart">
 
 		SELECT DATEPART(yyyy,maintain_time) AS yearData, count(*) AS num FROM plant_maintain WHERE YEAR(maintain_time) = year(GETDATE()) GROUP BY DATEPART(yyyy,maintain_time)
@@ -194,6 +200,13 @@
 	<delete id="deletePlantMaintainById" parameterType="Long">
 		delete from plant_maintain where id = #{id}
 	</delete>
+
+	<update id="deletePlantMaintain">
+		delete from  plant_maintain  where id in
+		<foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
 
 	<delete id="deletePlantMaintainByIds" parameterType="String">
 		delete from plant_maintain where id in

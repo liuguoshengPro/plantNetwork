@@ -68,8 +68,8 @@ public class PlantMaintainController {
 
     @GetMapping("/page" )
     @PreAuthorize("@pms.hasPermission('admin_plantmaintain_view')" )
-    public R getPlantMaintainPage(Page page, PlantMaintain plantMaintain) {
-        return R.ok(plantMaintainService.page(page, Wrappers.query(plantMaintain)));
+    public R getPlantMaintainPage(Page page, PlantMaintainDTO plantMaintain) {
+        return plantMaintainService.getPlantMaintainList(page,plantMaintain);
     }
 
 	@CrossOrigin
@@ -163,18 +163,17 @@ public class PlantMaintainController {
 
 
 	@PostMapping("/importPlantMaintain")
+	@PreAuthorize("@pms.hasPermission('admin_plantmaintain_import')" )
 	public R importPlantMaintain(@RequestExcel List<PlantMaintainVO> excelVOList, BindingResult bindingResult) {
 		return plantMaintainService.importPlantMaintain(excelVOList, bindingResult);
 	}
 
-	@Inner(value = false)
 	@ResponseExcel
 	@GetMapping("/exportPlantMaintain")
 	public List<PlantMaintainVO> exportPlantMaintain(PlantMaintainDTO plantMaintainDTO) {
 		return plantMaintainService.exportPlantMaintain(plantMaintainDTO);
 	}
 
-	@Inner(value = false)
 	@ResponseExcel
 	@GetMapping("/exportHeaderToExcel")
 	public void exportHeaderToExcel(HttpServletResponse response) throws IOException {
@@ -189,5 +188,18 @@ public class PlantMaintainController {
 			writer.write(data, sheet);
 			writer.finish();
 		}
+	}
+
+
+	/**
+	 * 删除
+	 * @param idList
+	 * @return
+	 */
+	@DeleteMapping("/deletePlantMaintain")
+	@PreAuthorize("@pms.hasPermission('admin_plantmaintain_delete')" )
+	public R deletePlantMaintain(@RequestBody List<Long> idList){
+
+		return plantMaintainService.deletePlantMaintain(idList);
 	}
 }

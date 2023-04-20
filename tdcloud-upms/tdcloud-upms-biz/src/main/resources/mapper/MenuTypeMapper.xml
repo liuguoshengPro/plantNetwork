@@ -66,6 +66,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM charge_standard
 	</select>
 
+	<select id="selectChargeStandardByItemType" parameterType="string" resultType="Double">
+		SELECT charge_standard FROM charge_standard where item_type = #{itemType}
+	</select>
+
 	<update id="updateChargeStandard" parameterType="com.tdkj.tdcloud.admin.api.entity.ChargeStandard">
 		update charge_standard
 		<trim prefix="SET" suffixOverrides=",">

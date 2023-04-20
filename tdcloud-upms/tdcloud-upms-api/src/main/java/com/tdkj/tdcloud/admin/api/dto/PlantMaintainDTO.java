@@ -62,7 +62,7 @@ public class PlantMaintainDTO extends Model<PlantMaintainDTO> {
     /**
      * 维护时间
      */
-    private LocalDateTime maintainTime;
+    private String[] maintainTime;
 
     /**
      * 解决办法
