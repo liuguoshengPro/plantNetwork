@@ -151,7 +151,11 @@ public class MenuTypeServiceImpl implements MenuTypeService
 		}
 		Date date = new Date();
 		menuTypeDto.setCreateTime(date);
-
+//		if (menuTypeDto.getConfiguration()==null || "".equals(menuTypeDto.getConfiguration())){
+//			return R.failed("请选择配置");
+//		}
+//		double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(menuTypeDto.getConfiguration(),menuTypeDto.getItemType());
+//		menuTypeDto.setChargeStandard(new BigDecimal(chargeStandard));
 		if (menuTypeDto.getId()==null){
 			int i = menuTypeMapper.insertMenuType(menuTypeDto);
 			if (i==1){
@@ -172,12 +176,12 @@ public class MenuTypeServiceImpl implements MenuTypeService
 					}
 				}
 
-//				MenuType menuType = menuTypeMapper.selectMenuTypeById(menuTypeDto.getId());
-//				List<DutyApplyReason> dutyApplyReasons = dutyApplyReasonMapper.selectDutyApplyByMenuTypeId(menuTypeDto.getId());
-//				List<DutyNetworkResource> dutyNetworkResources = dutyNetworkResourceMapper.selectDutyNetworkByMenuTypeId(menuTypeDto.getId());
-//				menuType.setDutyApplyReasonList(dutyApplyReasons);
-//				menuType.setDutyNetworkResourceList(dutyNetworkResources);
-				return R.ok("添加成功");
+				MenuType menuType = menuTypeMapper.selectMenuTypeById(menuTypeDto.getId());
+				List<AgreementResource> agreementResourceList = agreementResourceMapper.selectAgreementResourceByMenuTypeId(menuTypeDto.getId());
+				List<AgreementList> agreementListList = agreementListMapper.selectAgreementListByMenuTypeId(menuTypeDto.getId());
+				menuType.setAgreementResourceList(agreementResourceList);
+				menuType.setAgreementListList(agreementListList);
+				return R.ok(menuType,"添加成功");
 			}
 			return R.failed("添加失败");
 		}else {
@@ -311,9 +315,9 @@ public class MenuTypeServiceImpl implements MenuTypeService
 	}
 
 	@Override
-	public R selectChargeStandardList() {
+	public R selectChargeStandardList(String itemType) {
 
-		return R.ok(menuTypeMapper.selectChargeStandardList(),"列表数据");
+		return R.ok(menuTypeMapper.selectChargeStandardList(itemType),"列表数据");
 	}
 
 	@Override
@@ -322,32 +326,64 @@ public class MenuTypeServiceImpl implements MenuTypeService
 	}
 
 	@Override
+	public R addChargeStandard(ChargeStandard chargeStandard) {
+    	chargeStandard.setCreateTime(new Date());
+		return R.ok(menuTypeMapper.insertChargeStandard(chargeStandard),"添加失败");
+	}
+
+	@Override
 	public R getChargeStandardCalculate(MenuTypeDto menuTypeDto) {
 		Map<String,Object> map = new HashMap<>();
-		double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(menuTypeDto.getItemType());
-		BigDecimal cs = new BigDecimal(chargeStandard);//服务费
+
 		SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd");
 //		String startDateStr = time.format(menuTypeDto.getStartTime());
 //		String endDateStr = time.format(menuTypeDto.getEndTime());
 //		String startDateStr = "2023-01-01";
 //		String endDateStr = "2023-04-05";
+		if (menuTypeDto.getStartTime()==null || "".equals(menuTypeDto.getStartTime())){
+			return R.failed("请填写服务开始时间");
+		}
 		LocalDate startDate = LocalDate.parse(menuTypeDto.getStartTime());
+		if (menuTypeDto.getEndTime()==null || "".equals(menuTypeDto.getEndTime())){
+			return R.failed("请填写服务结束时间");
+		}
 		LocalDate endDate = LocalDate.parse(menuTypeDto.getEndTime());
 
 		long monthsBetween = ChronoUnit.MONTHS.between(startDate.withDayOfMonth(1), endDate.withDayOfMonth(1));
 		if (monthsBetween==0){
 			return R.failed("不能低于一个月");
 		}
+		if (menuTypeDto.getPlatformNum()==0 || menuTypeDto.getPlatformNum()<0){
+			return R.failed("请选择正确台数");
+		}
+
+		if (menuTypeDto.getConfiguration()==null || "".equals(menuTypeDto.getConfiguration())){
+			return R.failed("请选择配置");
+		}
+		double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(menuTypeDto.getConfiguration(),menuTypeDto.getItemType());
+
+		BigDecimal cs = new BigDecimal(chargeStandard);//服务费
 		BigDecimal paymentMethod = cs.multiply(new BigDecimal(monthsBetween)).multiply(new BigDecimal(menuTypeDto.getPlatformNum()));
 		System.out.println("----------------"+paymentMethod);
 
 		String moneyToChinese = MoneyToChineseUtil.convert(MoneyToChineseUtil.moneyFormat(String.valueOf(paymentMethod)));
 		System.out.println("--------------大写"+moneyToChinese);
+		if (paymentMethod.compareTo(BigDecimal.ZERO)==0){
+			moneyToChinese = "零元";
+		}
 		map.put("chargeStandard",cs);
 		map.put("paymentMethod",paymentMethod);
 		map.put("paymentUppercase",moneyToChinese);
 		map.put("serviceCharge",paymentMethod);
 		return R.ok(map,"费用数据");
+	}
+
+	@Override
+	public R deleteChargeStandard(Long id) {
+    	if (id==null){
+    		return R.failed("id不能为空");
+		}
+		return R.ok(menuTypeMapper.deleteChargeStandardId(id),"删除成功");
 	}
 
 }

@@ -28,8 +28,10 @@ public interface MenuTypeService
     R getSysDeptList();
     R saveUseDescription(UseDescription useDescription);
     R getUseDescription(String itemType);
-    R selectChargeStandardList();
+    R selectChargeStandardList(String itemType);
     R updateChargeStandard(ChargeStandard chargeStandard);
+    R addChargeStandard(ChargeStandard chargeStandard);
 
     R getChargeStandardCalculate(MenuTypeDto menuTypeDto);
+    R deleteChargeStandard(Long id);
 }

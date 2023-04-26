@@ -20,14 +20,10 @@ package com.tdkj.tdcloud.admin.api.vo;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import lombok.Data;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +50,7 @@ public class PlantMaintainVO {
      * 维护问题
      */
 	@ExcelProperty("维护类型")
-    private String maintainProblem;
+	private String maintainProblem;
 
     /**
      * 维护单位及人员

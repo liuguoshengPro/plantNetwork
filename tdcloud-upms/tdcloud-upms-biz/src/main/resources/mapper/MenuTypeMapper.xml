@@ -26,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="dnsDomain"    column="dns_domain"    />
 		<result property="ipAddress"    column="ip_address"    />
 		<result property="siteUsage"    column="site_usage"    />
+		<result property="configuration"    column="configuration"    />
     </resultMap>
 
 	<resultMap type="com.tdkj.tdcloud.admin.api.entity.ChargeStandard" id="ChargeStandardResult">
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectMenuTypeVo">
-		select id, master_id, create_time, is_delete, Item_type, apply_type, second_party, platform_num, start_time, end_time, charge_standard, payment_method, payment_uppercase, service_charge, user_name, user_dept, apply_time, user_phone, dns_domain, ip_address, site_usage from menu_type
+		select id, master_id,configuration, create_time, is_delete, Item_type, apply_type, second_party, platform_num, start_time, end_time, charge_standard, payment_method, payment_uppercase, service_charge, user_name, user_dept, apply_time, user_phone, dns_domain, ip_address, site_usage from menu_type
 	</sql>
 
     <select id="selectMenuTypeList" parameterType="com.tdkj.tdcloud.admin.api.entity.MenuType" resultMap="MenuTypeResult">
@@ -62,13 +63,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-	<select id="selectChargeStandardList" resultMap="ChargeStandardResult">
-		SELECT * FROM charge_standard
+	<select id="selectChargeStandardList" parameterType="string" resultMap="ChargeStandardResult">
+		SELECT * FROM charge_standard where item_type = #{itemType}
+		ORDER BY  charge_standard ASC
 	</select>
 
-	<select id="selectChargeStandardByItemType" parameterType="string" resultType="Double">
-		SELECT charge_standard FROM charge_standard where item_type = #{itemType}
+	<select id="selectChargeStandardByItemType" resultType="Double">
+		SELECT charge_standard FROM charge_standard where configuration = #{configuration}
+		and item_type = #{itemType}
 	</select>
+
+	<delete id="deleteChargeStandardId" parameterType="Long">
+		delete from charge_standard where id = #{id}
+	</delete>
 
 	<update id="updateChargeStandard" parameterType="com.tdkj.tdcloud.admin.api.entity.ChargeStandard">
 		update charge_standard
@@ -77,9 +84,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="itemType != null">item_type = #{itemType},</if>
 
 			<if test="chargeStandard != null">charge_standard = #{chargeStandard},</if>
+			<if test="configuration != null">configuration = #{configuration},</if>
 		</trim>
 		where id = #{id}
 	</update>
+
+	<insert id="insertChargeStandard" parameterType="com.tdkj.tdcloud.admin.api.entity.ChargeStandard" useGeneratedKeys="true" keyProperty="id">
+		insert into charge_standard
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="itemType != null">item_type,</if>
+			<if test="configuration != null">configuration,</if>
+			<if test="chargeStandard != null">charge_standard,</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="itemType != null">#{itemType},</if>
+			<if test="configuration != null">#{configuration},</if>
+			<if test="chargeStandard != null">#{chargeStandard},</if>
+
+		</trim>
+	</insert>
 
 	<select id="selectMenuTypeByMasterId" resultMap="MenuTypeResult">
 		<include refid="selectMenuTypeVo"/>
@@ -115,6 +143,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dnsDomain != null">dns_domain,</if>
 			<if test="ipAddress != null">ip_address,</if>
 			<if test="siteUsage != null">site_usage,</if>
+			<if test="configuration != null">configuration,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">#{id},</if>
@@ -138,6 +167,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dnsDomain != null">#{dnsDomain},</if>
 			<if test="ipAddress != null">#{ipAddress},</if>
 			<if test="siteUsage != null">#{siteUsage},</if>
+			<if test="configuration != null">#{configuration},</if>
 		</trim>
     </insert>
 	<select id="selectUseDescriptionById" parameterType="Long" resultType="com.tdkj.tdcloud.admin.api.entity.UseDescription">
@@ -200,6 +230,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dnsDomain != null">dns_domain = #{dnsDomain},</if>
 			<if test="ipAddress != null">ip_address = #{ipAddress},</if>
 			<if test="siteUsage != null">site_usage = #{siteUsage},</if>
+			<if test="configuration != null">configuration = #{configuration},</if>
 		</trim>
 		where id = #{id}
     </update>

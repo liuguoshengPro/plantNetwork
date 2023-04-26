@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * 维护信息数据
  *
- * @author pigx code generator
+ * @author code generator
  * @date 2023-03-29 14:16:38
  */
 @RestController

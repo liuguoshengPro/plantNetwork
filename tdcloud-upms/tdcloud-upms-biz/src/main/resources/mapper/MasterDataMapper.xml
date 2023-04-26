@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectExportMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResultVO">
 		<include refid="selectExportMasterDataVo"/>
 		<where>
-
+			<if test="auditType != null  and auditType != ''"> and audit_status != '1'</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
@@ -167,7 +167,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="updateMasterDataAuditStatus">
 		update master_data
-		set audit_status = #{auditStatus},audit_time = GETDATE()
+		set audit_status = #{auditStatus},audit_time = #{auditTime}
 		where id = #{masterId}
 	</update>
 

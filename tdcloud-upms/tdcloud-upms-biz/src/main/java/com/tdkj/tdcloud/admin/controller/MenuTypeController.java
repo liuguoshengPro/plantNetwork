@@ -101,11 +101,20 @@ public class MenuTypeController
 	}
 
 
+	/**
+	 * 查看收费列表
+	 * @return
+	 */
 	@GetMapping("/selectChargeStandardList")
-	public R selectChargeStandardList(){
-		return menuTypeService.selectChargeStandardList();
+	public R selectChargeStandardList(String itemType){
+		return menuTypeService.selectChargeStandardList(itemType);
 	}
 
+	/**
+	 * 修改
+	 * @param chargeStandard
+	 * @return
+	 */
 	@PostMapping("/updateChargeStandard")
 	public R updateChargeStandard(@RequestBody ChargeStandard chargeStandard){
 		return menuTypeService.updateChargeStandard(chargeStandard);
@@ -115,5 +124,20 @@ public class MenuTypeController
 	@GetMapping("/getChargeStandardCalculate")
 	public R getChargeStandardCalculate(MenuTypeDto menuTypeDto){
 		return menuTypeService.getChargeStandardCalculate(menuTypeDto);
+	}
+
+	/**
+	 * 添加
+	 * @param chargeStandard
+	 * @return
+	 */
+	@PostMapping("/addChargeStandard")
+	public R addChargeStandard(@RequestBody ChargeStandard chargeStandard){
+		return menuTypeService.addChargeStandard(chargeStandard);
+	}
+
+	@GetMapping("/deleteChargeStandard")
+	public R deleteChargeStandard(Long id){
+		return menuTypeService.deleteChargeStandard(id);
 	}
 }

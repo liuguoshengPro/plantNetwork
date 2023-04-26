@@ -78,8 +78,6 @@ public class MasterDataServiceImpl implements MasterDataService {
 		if ("cloud".equals(masterData.getItemType())) {
 			if (masterData2 != null) {
 
-				double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(masterData.getItemType());
-				BigDecimal cs = new BigDecimal(chargeStandard);//服务费
 				MenuType menuType = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "safe");
 				//MenuType menuType1 = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "safe");
 				if (menuType != null) {
@@ -95,7 +93,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 					agreement.setAgreementResourceList(agreementResourceList);
 					agreement.setAgreementListList(agreementListList);
 				}
-				map.put("chargeStandard", cs);
+
 				map.put("masterData2", masterData2);
 				map.put("menuType", menuType);
 				map.put("agreement", agreement);
@@ -104,8 +102,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 		}
 		if ("idc".equals(masterData.getItemType())) {
 			if (masterData2 != null) {
-				double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(masterData.getItemType());
-				BigDecimal cs = new BigDecimal(chargeStandard);//服务费
+
 				MenuType idcDuty = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "idcSafe");
 				//MenuType menuType1 = menuTypeMapper.selectMenuTypeByMasterId(masterData2.getId(), "safe");
 				if (idcDuty != null) {
@@ -121,7 +118,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 					idcAgreement.setAgreementResourceList(agreementResourceList);
 					idcAgreement.setAgreementListList(agreementListList);
 				}
-				map.put("chargeStandard", cs);
+
 				map.put("masterData2", masterData2);
 				map.put("idcDuty", idcDuty);
 				map.put("idcAgreement", idcAgreement);
@@ -166,12 +163,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 		int i = masterDataMapper.insertMasterData(masterData);
 		if (i == 1) {
 			MasterData masterData1 = masterDataMapper.selectMasterDataById(masterData.getId());
-			Double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(masterData1.getItemType());
-			BigDecimal cs = new BigDecimal(0);
-			if (chargeStandard!=null){
-				 cs = new BigDecimal(chargeStandard);//服务费
-			}
-			map.put("chargeStandard", cs);
+
 			map.put("masterData2", masterData1);
 			return R.ok(map, "添加成功");
 		}
@@ -227,6 +219,8 @@ public class MasterDataServiceImpl implements MasterDataService {
 					dutyApplyType = "idcSafe";
 				} else if ("ip".equals(md.getItemType())) {
 					dutyApplyType = "ipSafe";
+				}else {
+					dutyApplyType = "domainType";
 				}
 
 				MenuType safe = menuTypeMapper.selectMenuTypeByMasterId(md.getId(), dutyApplyType);
@@ -271,7 +265,8 @@ public class MasterDataServiceImpl implements MasterDataService {
 						}
 					}
 				}
-
+				md.setDnsDomain(safe.getDnsDomain());
+				md.setIpAddress(safe.getIpAddress());
 				md.setIntranetIp(intranetIp);
 				md.setExtranetIp(extranetIp);
 				md.setDomainName(domainName);
@@ -336,6 +331,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 	@Override
 	public List<MasterDataVO> exportMasterData(MasterDataDto masterDataDto) {
+		masterDataDto.setAuditType("reviewed");
 		if (masterDataDto.getSubmitTime()!=null && masterDataDto.getSubmitTime().length>0){
 			for (int j = 0; j<masterDataDto.getSubmitTime().length; j++){
 				masterDataDto.setBeginSubmitTime(masterDataDto.getSubmitTime()[0]);
@@ -353,14 +349,18 @@ public class MasterDataServiceImpl implements MasterDataService {
 		// 转换成execl 对象输出
 		if (masterDataList.size()>0){
 			for (MasterDataVO masterData : masterDataList){
+				String dutyApplyType = "";
 				if ("cloud".equals(masterData.getItemType())){
 					masterData.setItemType("云服务器申请");
+					dutyApplyType = "safe";
 				}
 				if ("idc".equals(masterData.getItemType())){
 					masterData.setItemType("IDC服务器申请");
+					dutyApplyType = "idcSafe";
 				}
 				if ("ip".equals(masterData.getItemType())){
 					masterData.setItemType("IP地址申请");
+					dutyApplyType = "ipSafe";
 				}
 				if ("domain".equals(masterData.getItemType())){
 					masterData.setItemType("二级域名解析申请");
@@ -383,12 +383,13 @@ public class MasterDataServiceImpl implements MasterDataService {
 				if ("1".equals(masterData.getAllocationStatus())){
 					masterData.setAllocationStatus("已分配");
 				}
-				MenuType safe = menuTypeMapper.selectMenuTypeByMasterId(masterData.getId(), "safe");
+				MenuType safe = menuTypeMapper.selectMenuTypeByMasterId(masterData.getId(), dutyApplyType);
+				String intranetIp = "";//内网ip
+				String extranetIp = "";//外网ip
+				String domainName = "";//域名
 				if (safe != null) {
 					List<DutyNetworkResource> dutyNetworkResourceList = dutyNetworkResourceMapper.selectDutyNetworkByMenuTypeId(safe.getId());
-					String intranetIp = "";//内网ip
-					String extranetIp = "";//外网ip
-					String domainName = "";//域名
+
 					for (int i = 0; i < dutyNetworkResourceList.size(); i++) {
 						intranetIp = intranetIp + dutyNetworkResourceList.get(i).getIntranetIp();
 						extranetIp = extranetIp + dutyNetworkResourceList.get(i).getExtranetIp();
@@ -426,7 +427,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 //			if ("3".equals(checkReason.getIsAgree())) {
 //				checkReason.setIsAgree("0");
 //			}
-			masterDataMapper.updateMasterDataAuditStatus(checkReason.getIsAgree(), checkReason.getMasterId());
+			masterDataMapper.updateMasterDataAuditStatus(checkReason.getIsAgree(), checkReason.getMasterId(),new Date());
 			String email = masterDataMapper.selectSysUserByUserId(checkReason.getUserId());
 			EmailSender emailSender = new EmailSender();
 			emailSender.setName(checkReason.getUserName());

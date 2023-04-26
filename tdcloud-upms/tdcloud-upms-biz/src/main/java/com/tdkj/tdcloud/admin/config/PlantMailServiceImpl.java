@@ -58,6 +58,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 		pro = System.getProperties(); // 下面各项缺一不可
 		pro.put("mail.smtp.auth", "true");
 		pro.put("mail.smtp.ssl.enable", "true");
+		pro.put("mail.smtp.ssl.protocols", "TLSv1.2");
 		pro.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 	}
 
@@ -71,7 +72,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setFrom(from); // 发送人
 			helper.setTo(emailSender.getToEmail()); // 收件人
-			helper.setSubject("【网络资源申请管理平台】"); // 标题
+			helper.setSubject("【中国科学院昆明植物研究所一体化云服务平台】"); // 标题
 			// TODO: 使用安全的随机数生成器生成验证码
 			Random rand = new Random();
 			int num = rand.nextInt(900000) + 100000;
@@ -85,7 +86,8 @@ public class PlantMailServiceImpl implements PlantMailService {
 					return R.failed("邮箱已被注册");
 				}
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
-						"您在中国科学院昆明植物研究所一体化云服务平台的注册验证码为%s，请前往服务平台完成注册验证，谢谢！\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台的注册验证码为%s，\n" +
+						"请前往服务平台完成注册验证，谢谢！\n" +
 						"此邮件由系统自动发出,请勿直接回复。\n" +
 						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +
 						"感谢您的访问,祝您使用愉快!\n" +
@@ -102,7 +104,8 @@ public class PlantMailServiceImpl implements PlantMailService {
 					return R.failed("邮箱不存在");
 				}
 				String textContent = "亲爱的"+sysUserByEmail.getName()+", 您好！\n" +
-						"您在中国科学院昆明植物研究所一体化云服务平台的验证码为%s，请前往服务平台完成密码修改，谢谢！\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台的验证码为%s，\n" +
+						"请前往服务平台完成密码修改，谢谢！\n" +
 						"此邮件由系统自动发出,请勿直接回复。\n" +
 						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +
 						"感谢您的访问,祝您使用愉快!\n" +

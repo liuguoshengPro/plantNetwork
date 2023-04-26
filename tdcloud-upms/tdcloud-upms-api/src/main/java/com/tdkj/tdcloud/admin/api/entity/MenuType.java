@@ -85,6 +85,7 @@ public class MenuType
 
 	/** 网站用途 */
 	private String siteUsage;
+	private String configuration;
 
 	private List<DutyApplyReason> dutyApplyReasonList = new ArrayList<>();
 	private List<DutyNetworkResource> dutyNetworkResourceList = new ArrayList<>();

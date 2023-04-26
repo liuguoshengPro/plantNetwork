@@ -33,9 +33,9 @@ public class MoneyToChineseUtil {
 		amount = amount.replace(",", "");
 
 		// 验证金额正确性
-		if (amount.equals("0.00")) {
-			throw new IllegalArgumentException("金额不能为零.");
-		}
+//		if (amount.equals("0.00")) {
+//			throw new IllegalArgumentException("金额不能为零.");
+//		}
 		Matcher matcher = AMOUNT_PATTERN.matcher(amount);
 		if (! matcher.find()) {
 			throw new IllegalArgumentException("输入金额有误.");

@@ -28,8 +28,10 @@ public interface MenuTypeMapper
     public MenuType selectMenuTypeByMasterId(@Param("masterId") Long masterId,@Param("applyType")String applyType);
     public int selectMenuTypeByMasterIdTotal(@Param("masterId") Long masterId);
     public int updateChargeStandard(ChargeStandard chargeStandard);
-    public List<ChargeStandard> selectChargeStandardList();
-    public Double selectChargeStandardByItemType(@Param("itemType")String itemType);
+    public int insertChargeStandard(ChargeStandard chargeStandard);
+    public List<ChargeStandard> selectChargeStandardList(String itemType);
+    public Double selectChargeStandardByItemType(@Param("configuration")String configuration,@Param("itemType")String itemType);
+    public int deleteChargeStandardId(Long id);
 
     /**
      * 查询主数据下两张数据列表

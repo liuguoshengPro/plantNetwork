@@ -16,7 +16,9 @@ public class ChargeStandard {
 	//收费标准
 	private BigDecimal chargeStandard;
 
+	private String configuration;
+
 	//保存时间
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:dd")
 	private Date createTime;
 }

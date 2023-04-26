@@ -1,5 +1,6 @@
 package com.tdkj.tdcloud.admin.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.tdkj.tdcloud.admin.api.dto.MasterDataDto;
@@ -58,7 +59,7 @@ public interface MasterDataMapper
      * @return 结果
      */
     public int updateMasterData(MasterData masterData);
-    public int updateMasterDataAuditStatus(@Param("auditStatus") String auditStatus,@Param("masterId") Long masterId);
+    public int updateMasterDataAuditStatus(@Param("auditStatus") String auditStatus, @Param("masterId") Long masterId, @Param("auditTime")Date auditTime);
     public int updateMasterDataAllocationStatus(@Param("allocationStatus") String allocationStatus,@Param("masterId") Long masterId);
 
     /**
