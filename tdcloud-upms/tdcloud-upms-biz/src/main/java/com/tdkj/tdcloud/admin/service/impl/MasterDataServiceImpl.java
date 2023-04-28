@@ -182,6 +182,10 @@ public class MasterDataServiceImpl implements MasterDataService {
 	public R getMasterDataList(MasterDataDto masterDataDto) {
 		if (masterDataDto.getPage() == 0) masterDataDto.setPage(1);
 		masterDataDto.setPage((masterDataDto.getPage() - 1) * masterDataDto.getPageSize());
+		if (!"ROLE_ADMIN".equals(masterDataDto.getAuthority())){
+			Long userId = SecurityUtils.getUser().getId();
+			masterDataDto.setUserId(userId.toString());
+		}
 		if (masterDataDto.getSubmitTime() != null && masterDataDto.getSubmitTime().length > 0) {
 			for (int j = 0; j < masterDataDto.getSubmitTime().length; j++) {
 				masterDataDto.setBeginSubmitTime(masterDataDto.getSubmitTime()[0]);
@@ -263,10 +267,13 @@ public class MasterDataServiceImpl implements MasterDataService {
 //							}
 							}
 						}
+					}else {
+						extranetIp = safe.getIpAddress();
+						domainName = safe.getDnsDomain();
 					}
+					md.setDnsDomain(safe.getDnsDomain());
+					md.setIpAddress(safe.getIpAddress());
 				}
-				md.setDnsDomain(safe.getDnsDomain());
-				md.setIpAddress(safe.getIpAddress());
 				md.setIntranetIp(intranetIp);
 				md.setExtranetIp(extranetIp);
 				md.setDomainName(domainName);
@@ -480,6 +487,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 				dataMap.put("eM", month.format(menuType.getEndTime()));
 				dataMap.put("eD", day.format(menuType.getEndTime()));
 				dataMap.put("chargeStandard", menuType.getChargeStandard());
+				dataMap.put("configuration", menuType.getConfiguration());
 				dataMap.put("paymentMethod", menuType.getPaymentMethod());
 				dataMap.put("paymentUppercase", menuType.getPaymentUppercase());
 				dataMap.put("serviceCharge", menuType.getServiceCharge());
@@ -499,7 +507,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 					String wordFileName = realPath + "idc.docx";
 
 					String pdfFileName = realPath + "idc.pdf";
-					freemarkerBase.word2pdf(dataMap, response, "idcAgreement.ftl", wordFileName, pdfFileName);
+					freemarkerBase.word2pdf(dataMap, response, "idcAgreementNew.ftl", wordFileName, pdfFileName);
 				}
 			}
 		}
@@ -530,7 +538,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 				String pdfFileName = realPath + "ip.pdf";
 
-				freemarkerBase.word2pdf(dataMap, response, "ipAgreement.ftl", wordFileName, pdfFileName);
+				freemarkerBase.word2pdf(dataMap, response, "ipAgreementNew.ftl", wordFileName, pdfFileName);
 			}
 		}
 
@@ -569,7 +577,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 	@Override
 	public R updateMasterDataAllocationStatus(Long masterId) {
-		int i = masterDataMapper.updateMasterDataAllocationStatus("1", masterId);
+		int i = masterDataMapper.updateMasterDataAllocationStatus("1", masterId,new Date());
 		if (i != 1) {
 			return R.failed();
 		}

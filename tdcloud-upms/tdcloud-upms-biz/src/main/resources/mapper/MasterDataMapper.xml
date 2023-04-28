@@ -39,7 +39,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResult">
         <include refid="selectMasterDataVo"/>
         <where>
-			<if test="auditType != null  and auditType != ''"> and audit_status != '1'</if>
+			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
+			<if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
             <if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
             <if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
@@ -56,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectExportMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResultVO">
 		<include refid="selectExportMasterDataVo"/>
 		<where>
-			<if test="auditType != null  and auditType != ''"> and audit_status != '1'</if>
+			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
@@ -80,7 +81,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(id) from master_data
 
 		<where>
-			<if test="auditType != null  and auditType != ''"> and audit_status != '1'</if>
+			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
+			<if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
@@ -173,7 +175,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="updateMasterDataAllocationStatus">
 		update master_data
-		set allocation_status = #{allocationStatus},allocation_time = GETDATE()
+		set allocation_status = #{allocationStatus},allocation_time = #{allocationTime}
 		where id = #{masterId}
 	</update>
 
@@ -218,6 +220,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			) AS m
 				LEFT JOIN master_data AS md ON m.month = MONTH(md.submit_time)
 			AND YEAR(md.submit_time) = #{year} AND md.Item_type = #{itemType}
+			and md.allocation_status = '1'
 		GROUP BY
 			m.month
 		ORDER BY

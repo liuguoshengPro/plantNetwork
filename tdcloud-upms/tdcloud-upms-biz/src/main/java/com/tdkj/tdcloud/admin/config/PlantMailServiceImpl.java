@@ -7,11 +7,8 @@ import com.tdkj.tdcloud.admin.service.PlantMailService;
 import com.tdkj.tdcloud.common.core.util.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -149,16 +146,6 @@ public class PlantMailServiceImpl implements PlantMailService {
 		}
 		return R.ok("发送成功");
 	}
-
-//	@Override
-//	public R userRegister(EmailSender emailSender) {
-//		String code = (String)redisTemplate.opsForValue().get(emailSender.getToEmail() + "register");
-//		if (!emailSender.getCode().equals(code)){
-//			return R.failed("验证码错误");
-//		}
-//
-//		return null;
-//	}
 
 }
 

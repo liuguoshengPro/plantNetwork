@@ -69,4 +69,6 @@ public class MasterDataDto
 
 	private List<Long> idList;
 
+	private String authority;
+
 }
