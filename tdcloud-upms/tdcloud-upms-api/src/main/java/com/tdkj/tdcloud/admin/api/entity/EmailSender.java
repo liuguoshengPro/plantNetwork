@@ -10,5 +10,6 @@ public class EmailSender {
 	public String name;
 	public String emailType;
 	public String passWord;
+	public String itemType;
 
 }

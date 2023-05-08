@@ -29,6 +29,7 @@ public class MasterDataDto
     /** 分配状态 */
     private String allocationStatus;
     private String userId;
+    private String userName;
 
     /** 提交时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")

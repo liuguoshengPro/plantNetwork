@@ -41,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
 			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
 			<if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+			<if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
             <if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
             <if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
             <if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
@@ -59,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
+			<if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
 			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
@@ -83,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
 			<if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+			<if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
@@ -218,8 +221,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION
 				SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
 			) AS m
-				LEFT JOIN master_data AS md ON m.month = MONTH(md.submit_time)
-			AND YEAR(md.submit_time) = #{year} AND md.Item_type = #{itemType}
+				LEFT JOIN master_data AS md ON m.month = MONTH(md.allocation_time)
+			AND YEAR(md.allocation_time) = #{year} AND md.Item_type = #{itemType}
 			and md.allocation_status = '1'
 		GROUP BY
 			m.month

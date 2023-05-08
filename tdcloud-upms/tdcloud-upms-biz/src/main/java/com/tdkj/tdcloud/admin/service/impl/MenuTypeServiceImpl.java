@@ -13,6 +13,7 @@ import com.tdkj.tdcloud.admin.api.dto.IpGradingReportDTO;
 import com.tdkj.tdcloud.admin.api.dto.MenuTypeDto;
 import com.tdkj.tdcloud.admin.api.entity.*;
 import com.tdkj.tdcloud.admin.mapper.*;
+import com.tdkj.tdcloud.admin.service.MasterDataService;
 import com.tdkj.tdcloud.admin.service.MenuTypeService;
 import com.tdkj.tdcloud.admin.util.ChineseNumber;
 import com.tdkj.tdcloud.admin.util.MoneyToChineseUtil;
@@ -54,6 +55,8 @@ public class MenuTypeServiceImpl implements MenuTypeService
 
     @Resource
 	private MasterDataMapper masterDataMapper;
+    @Resource
+	private MasterDataService masterDataService;
 
 
 
@@ -134,7 +137,7 @@ public class MenuTypeServiceImpl implements MenuTypeService
 
 					}
 				}
-				return R.ok("修改成功");
+				return R.ok(i,"修改成功");
 			}
 			return R.failed("添加失败");
 		}
@@ -212,7 +215,7 @@ public class MenuTypeServiceImpl implements MenuTypeService
 
 					}
 				}
-				return R.ok("修改成功");
+				return R.ok(i,"修改成功");
 			}
 			return R.failed("添加失败");
 		}
@@ -241,14 +244,14 @@ public class MenuTypeServiceImpl implements MenuTypeService
     		ipGradingReportDTO.setCreateTime(new Date());
 			int i = ipGradingReportMapper.insertIpGradingReport(ipGradingReportDTO);
 			if (i==1){
-				return R.ok("添加成功");
+				return R.ok(i,"添加成功");
 			}else {
 				return R.failed();
 			}
 		}else {
     		int i = ipGradingReportMapper.updateIpGradingReport(ipGradingReportDTO);
 			if (i==1){
-				return R.ok("修改成功");
+				return R.ok(i,"修改成功");
 			}else {
 				return R.failed();
 			}
@@ -262,14 +265,14 @@ public class MenuTypeServiceImpl implements MenuTypeService
 			menuTypeDto.setApplyTime(new Date());
 			int i = menuTypeMapper.insertMenuType(menuTypeDto);
 			if (i == 1) {
-				return R.ok("添加成功");
+				return R.ok(i,"添加成功");
 			} else {
 				return R.failed();
 			}
 		} else {
 			int i = menuTypeMapper.updateMenuType(menuTypeDto);
 			if (i == 1) {
-				return R.ok("修改成功");
+				return R.ok(i,"修改成功");
 			} else {
 				return R.failed();
 			}

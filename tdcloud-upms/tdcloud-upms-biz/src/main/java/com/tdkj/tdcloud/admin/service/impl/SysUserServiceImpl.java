@@ -524,11 +524,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if (!sysUser.getCode().equals(code)){
 			return R.failed("验证码错误");
 		}
-		if (isValidPassword(sysUser.getPassword())) {
-			logger.info("密码符合要求");
-		} else {
-			return R.failed("密码不符合要求");
-		}
+//		if (isValidPassword(sysUser.getPassword())) {
+//			logger.info("密码符合要求");
+//		} else {
+//			return R.failed("密码不符合要求");
+//		}
 		sysUser.setDelFlag(CommonConstants.STATUS_NORMAL);
 		sysUser.setPassword(ENCODER.encode(sysUser.getPassword()));
 		sysUser.setDeptId(2L);
@@ -555,11 +555,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if (!sysUser.getCode().equals(code)){
 			return R.failed("验证码错误");
 		}
-		if (isValidPassword(sysUser.getPassword())) {
-			logger.info("密码符合要求");
-		} else {
-			return R.failed("密码不符合要求");
-		}
+//		if (isValidPassword(sysUser.getPassword())) {
+//			logger.info("密码符合要求");
+//		} else {
+//			return R.failed("密码不符合要求");
+//		}
 		sysUser.setPassword(ENCODER.encode(sysUser.getPassword()));
 		sysUser.setUsername(sysUser.getToEmail());
 		sysUser.setUserId(sysUserByEmail.getUserId());
@@ -579,7 +579,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	public static boolean isValidPassword(String password) {
 		// 密码必须包含大写字母、小写字母、数字和特殊符号
-		String pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+		String pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&*()+=!.~-])(?=\\S+$).{8,}$";
 		return password.matches(pattern);
 	}
 

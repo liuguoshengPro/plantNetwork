@@ -59,8 +59,10 @@ public class InformationSystemServiceImpl implements InformationSystemService
 		if (total>0){
 			List<InformationSystem> informationSystems = informationSystemMapper.selectInfoSystemList(informationSystem);
 			for (InformationSystem is:informationSystems){
-				String dept = masterDataMapper.selectSysDeptById(Long.valueOf(is.getUseDept()));
-				is.setDeptName(dept);
+				if (is.getUseDept()!=null && !"".equals(is.getUseDept())){
+					String dept = masterDataMapper.selectSysDeptById(Long.valueOf(is.getUseDept()));
+					is.setDeptName(dept);
+				}
 			}
 			map.put("total",total);
 			map.put("informationSystems",informationSystems);

@@ -445,6 +445,19 @@ public class MasterDataServiceImpl implements MasterDataService {
 			} else {
 				emailType = "applyRefuse";
 			}
+			if ("cloud".equals(checkReason.getItemType())){
+				emailSender.setItemType("云服务器");
+			}
+			if ("ip".equals(checkReason.getItemType())){
+				emailSender.setItemType("IP地址");
+			}
+			if ("idc".equals(checkReason.getItemType())){
+				emailSender.setItemType("IDC服务器");
+			}
+			if ("domain".equals(checkReason.getItemType())){
+				emailSender.setItemType("二级域名解析");
+			}
+
 			emailSender.setEmailType(emailType);
 			mailService.sendSimpleMail(emailSender);
 			return R.ok("审核成功");

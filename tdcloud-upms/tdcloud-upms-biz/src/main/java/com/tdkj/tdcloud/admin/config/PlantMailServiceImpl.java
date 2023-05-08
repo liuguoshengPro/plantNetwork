@@ -115,7 +115,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 
 			if ("applyAgree".equals(emailSender.getEmailType())){
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
-						"您在中国科学院昆明植物研究所一体化云服务平台申请的云服务器已经审核通过，请前往服务平台打印服务申请书，签字后送至科技信息中心307室，谢谢！\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"已经审核通过，请前往服务平台打印服务申请书，签字后送至科技信息中心307室，谢谢！\n" +
 						"此邮件由系统自动发出,请勿直接回复。\n" +
 						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +
 						"感谢您的访问,祝您使用愉快!\n" +
@@ -126,7 +126,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 			}
 			if ("applyRefuse".equals(emailSender.getEmailType())){
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
-						"您在中国科学院昆明植物研究所一体化云服务平台申请的云服务器审核未通过，请前往服务平台检查申请内容后重新提交申请，谢谢！\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"审核未通过，请前往服务平台检查申请内容后重新提交申请，谢谢！\n" +
 						"此邮件由系统自动发出,请勿直接回复。\n" +
 						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +
 						"感谢您的访问,祝您使用愉快!\n" +
