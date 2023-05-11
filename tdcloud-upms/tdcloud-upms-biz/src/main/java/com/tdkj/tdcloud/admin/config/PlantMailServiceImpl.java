@@ -61,10 +61,17 @@ public class PlantMailServiceImpl implements PlantMailService {
 
 	@Override
 	public R sendSimpleMail(EmailSender emailSender) {
-
+		long startTime11 = System.currentTimeMillis();
 		sender.setJavaMailProperties(pro);
+		long endTime11 = System.currentTimeMillis();
+		long elapsedTime11 = endTime11 - startTime11;
+		System.out.println("11111111111111111111: " + elapsedTime11 + "ms");
 
+		long startTime22 = System.currentTimeMillis();
 		MimeMessage message = sender.createMimeMessage();
+		long endTime22 = System.currentTimeMillis();
+		long elapsedTime22 = endTime22 - startTime22;
+		System.out.println("222222222222222: " + elapsedTime22 + "ms");
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setFrom(from); // 发送人
@@ -112,7 +119,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 				redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
 
 			}
-
+			long startTime1 = System.currentTimeMillis();
 			if ("applyAgree".equals(emailSender.getEmailType())){
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
 						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"已经审核通过，请前往服务平台打印服务申请书，签字后送至科技信息中心307室，谢谢！\n" +
@@ -124,6 +131,9 @@ public class PlantMailServiceImpl implements PlantMailService {
 				helper.setText(textContent); // 内容
 				//redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
 			}
+			long endTime1 = System.currentTimeMillis();
+			long elapsedTime1 = endTime1 - startTime1;
+			System.out.println("Elapsed time111111111: " + elapsedTime1 + "ms");
 			if ("applyRefuse".equals(emailSender.getEmailType())){
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
 						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"审核未通过，请前往服务平台检查申请内容后重新提交申请，谢谢！\n" +
@@ -135,8 +145,13 @@ public class PlantMailServiceImpl implements PlantMailService {
 				helper.setText(textContent); // 内容
 				//redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
 			}
+			long startTime = System.currentTimeMillis();
 			sender.send(message);
 			logger.info("邮件已经发送。");
+
+			long endTime = System.currentTimeMillis();
+			long elapsedTime = endTime - startTime;
+			System.out.println("Elapsed time: " + elapsedTime + "ms");
 		} catch (MessagingException e) {
 			logger.error("发送邮件时发生异常！", e);
 			e.printStackTrace();

@@ -80,4 +80,6 @@ public class IpGradingReportDTO
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createTime;
 
+	private String checkReasonType;
+
 }

@@ -19,6 +19,7 @@ import com.tdkj.tdcloud.admin.api.vo.PostExcelVO;
 import com.tdkj.tdcloud.admin.mapper.*;
 import com.tdkj.tdcloud.admin.service.MailService;
 import com.tdkj.tdcloud.admin.service.MasterDataService;
+import com.tdkj.tdcloud.admin.service.MenuTypeService;
 import com.tdkj.tdcloud.admin.service.PlantMailService;
 import com.tdkj.tdcloud.admin.util.FreemarkerBase;
 import com.tdkj.tdcloud.admin.util.MyPathUitls;
@@ -63,6 +64,9 @@ public class MasterDataServiceImpl implements MasterDataService {
 	private IpGradingReportMapper ipGradingReportMapper;
 	@Resource
 	private DomainNameApplyMapper domainNameApplyMapper;
+
+	@Resource
+	private MenuTypeService menuTypeService;
 
 	@Transactional
 	@Override
@@ -427,13 +431,53 @@ public class MasterDataServiceImpl implements MasterDataService {
 				checkReason.setRemark("不同意");
 			}
 		}
+
+		if ("2".equals(checkReason.getIsAgree())) {
+			if ("cloud".equals(checkReason.getItemType())){
+				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
+				int code = r.getCode();
+				if (code==1){
+					return R.failed(code,"请配置资源");
+				}
+				R r1 = menuTypeService.saveMenuApplyAgreement(checkReason.getMenuTypeDtoAgreement());
+				int code1 = r1.getCode();
+				if (code1==1){
+					return R.failed(code1,"请配置资源");
+				}
+			}
+
+			if ("ip".equals(checkReason.getItemType())){
+				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
+				int ipCode = r.getCode();
+				if (ipCode==1){
+					return R.failed(ipCode,"请配置资源");
+				}
+				R r1 = menuTypeService.saveMenuApplyIp(checkReason.getIpGradingReportDTO());
+				int ipCode1 = r1.getCode();
+				if (ipCode1==1){
+					return R.failed(ipCode1,"请配置资源");
+				}
+			}
+
+			if ("idc".equals(checkReason.getItemType())){
+				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
+				int idcCode = r.getCode();
+				if (idcCode==1){
+					return R.failed(idcCode,"请配置资源");
+				}
+				R r1 = menuTypeService.saveMenuApplyAgreement(checkReason.getMenuTypeDtoAgreement());
+				int idcCode1 = r1.getCode();
+				if (idcCode1==1){
+					return R.failed(idcCode1,"请配置资源");
+				}
+			}
+		}
 		checkReason.setCreateTime(new Date());
 		checkReason.setUpdateTime(new Date());
+
 		int i = checkReasonMapper.insertCheckReason(checkReason);
 		if (i == 1) {
-//			if ("3".equals(checkReason.getIsAgree())) {
-//				checkReason.setIsAgree("0");
-//			}
+
 			masterDataMapper.updateMasterDataAuditStatus(checkReason.getIsAgree(), checkReason.getMasterId(),new Date());
 			String email = masterDataMapper.selectSysUserByUserId(checkReason.getUserId());
 			EmailSender emailSender = new EmailSender();
@@ -462,7 +506,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 			mailService.sendSimpleMail(emailSender);
 			return R.ok("审核成功");
 		}
-		return null;
+		return R.ok("审核成功");
 	}
 
 	@Override
@@ -624,6 +668,53 @@ public class MasterDataServiceImpl implements MasterDataService {
 		map.put("lineIp",lineIp);
 		map.put("lineDomain",lineDomain);
 		return R.ok(map,"统计数据");
+	}
+
+	@Transactional
+	@Override
+	public R auditSendEmail(CheckReason checkReason) {
+		if ("".equals(checkReason.getRemark()) || checkReason.getRemark() == null) {
+			if ("2".equals(checkReason.getIsAgree())) {
+				checkReason.setRemark("同意");
+			}
+			if ("3".equals(checkReason.getIsAgree())) {
+				checkReason.setRemark("不同意");
+			}
+		}
+		checkReason.setCreateTime(new Date());
+		checkReason.setUpdateTime(new Date());
+
+		int i = checkReasonMapper.insertCheckReason(checkReason);
+		if (i == 1) {
+			masterDataMapper.updateMasterDataAuditStatus(checkReason.getIsAgree(), checkReason.getMasterId(), new Date());
+			String email = masterDataMapper.selectSysUserByUserId(checkReason.getUserId());
+			EmailSender emailSender = new EmailSender();
+			emailSender.setName(checkReason.getUserName());
+			emailSender.setToEmail(email);
+			String emailType = "";
+			if ("2".equals(checkReason.getIsAgree())) {
+				emailType = "applyAgree";
+			} else {
+				emailType = "applyRefuse";
+			}
+			if ("cloud".equals(checkReason.getItemType())) {
+				emailSender.setItemType("云服务器");
+			}
+			if ("ip".equals(checkReason.getItemType())) {
+				emailSender.setItemType("IP地址");
+			}
+			if ("idc".equals(checkReason.getItemType())) {
+				emailSender.setItemType("IDC服务器");
+			}
+			if ("domain".equals(checkReason.getItemType())) {
+				emailSender.setItemType("二级域名解析");
+			}
+
+			emailSender.setEmailType(emailType);
+			mailService.sendSimpleMail(emailSender);
+			return R.ok("发送成功");
+		}
+		return R.ok("发送成功");
 	}
 
 }

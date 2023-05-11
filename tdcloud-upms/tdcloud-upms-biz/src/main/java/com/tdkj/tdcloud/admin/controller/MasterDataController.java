@@ -127,4 +127,10 @@ public class MasterDataController
 		return masterDataService.getMasterStatistics(year);
 	}
 
+	@Inner(value = false)
+	@PostMapping("/auditSendEmail")
+	public R auditSendEmail(@RequestBody CheckReason checkReason) {
+		return masterDataService.auditSendEmail(checkReason);
+	}
+
 }

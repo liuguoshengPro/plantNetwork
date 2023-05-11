@@ -19,8 +19,10 @@ gateway:
 
 # 数据源
 spring:
+  main:
+    allow-circular-references: true
   redis:
-    host: 192.168.1.135
+    host: 127.0.0.1
     database: 9  #避免和微服务 PIGX 冲突
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -29,14 +31,14 @@ spring:
 #      username: root
 #      password: root
 #      url: jdbc:mysql://127.0.0.1:3306/tdcloudx_boot?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
-#      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-#      username: sa
-#      password: tdkj@2020
-#      url: jdbc:sqlserver://192.168.103.213:1433;SelectMethod=cursor;DatabaseName=tdcloudx_boot;characterEncoding=utf8
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       username: sa
-      password: Kibtdkj@!2023
-      url: jdbc:sqlserver://192.168.103.213:1433;SelectMethod=cursor;DatabaseName=tdcloudx_boot;characterEncoding=utf8
+      password: tdkj@2020
+      url: jdbc:sqlserver://192.168.1.135:1433;SelectMethod=cursor;DatabaseName=tdcloudx_boot;characterEncoding=utf8
+#      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#      username: sa
+#      password: TDKJkib@2023
+#      url: jdbc:sqlserver://127.0.0.1:1436;SelectMethod=cursor;DatabaseName=tdcloudx_boot;characterEncoding=utf8
 
       stat-view-servlet:
         enabled: true
@@ -97,7 +99,7 @@ spring:
 #    default-encoding: UTF-8
 #    host: smtp.qq.com
 #    username: 761301854@qq.com
-#    password: ulistgobolevbceb
+#    password: lvmfpmeoktzobcfj
 #    port: 465
 #    protocol: smtp
 #    properties:

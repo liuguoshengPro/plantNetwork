@@ -1,10 +1,7 @@
 package com.tdkj.tdcloud.admin.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.tdkj.tdcloud.admin.api.entity.AgreementList;
-import com.tdkj.tdcloud.admin.api.entity.AgreementResource;
-import com.tdkj.tdcloud.admin.api.entity.DutyApplyReason;
-import com.tdkj.tdcloud.admin.api.entity.DutyNetworkResource;
+import com.tdkj.tdcloud.admin.api.entity.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -89,6 +86,8 @@ public class MenuTypeDto
 	/** 网站用途 */
 	private String siteUsage;
 	private String configuration;
+
+	private String checkReasonType;
 
 	private List<DutyApplyReason> dutyApplyReasonList = new ArrayList<>();
 	private List<DutyNetworkResource> dutyNetworkResourceList = new ArrayList<>();

@@ -1,6 +1,8 @@
 package com.tdkj.tdcloud.admin.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tdkj.tdcloud.admin.api.dto.IpGradingReportDTO;
+import com.tdkj.tdcloud.admin.api.dto.MenuTypeDto;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -41,5 +43,10 @@ public class CheckReason
 	private Date updateTime;
 
 
+	private String checkReasonType;
 
+	private MenuTypeDto menuTypeDto;
+	private MenuTypeDto menuTypeDtoAgreement;
+
+	private IpGradingReportDTO ipGradingReportDTO;
 }
