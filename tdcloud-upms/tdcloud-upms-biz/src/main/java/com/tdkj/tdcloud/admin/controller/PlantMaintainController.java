@@ -72,6 +72,12 @@ public class PlantMaintainController {
         return plantMaintainService.getPlantMaintainList(page,plantMaintain);
     }
 
+    @Inner(value = false)
+	@GetMapping("/getNotAuthorityPlantMaintain" )
+	public R getNotAuthorityPlantMaintain(Page page, PlantMaintainDTO plantMaintain) {
+		return plantMaintainService.getPlantMaintainList(page,plantMaintain);
+	}
+
 	@CrossOrigin
 	@Inner(value = false)
 	@GetMapping("/noAccess" )
@@ -155,6 +161,7 @@ public class PlantMaintainController {
 		return plantMaintainService.getPlantMaintainColumnar();
 	}
 
+	@Inner(value = false)
 	@GetMapping("/getDictItemList")
 	public R getDictItemList(){
 
@@ -162,9 +169,10 @@ public class PlantMaintainController {
 	}
 
 
+
 	@PostMapping("/importPlantMaintain")
 	@PreAuthorize("@pms.hasPermission('admin_plantmaintain_import')" )
-	public R importPlantMaintain(@RequestExcel List<PlantMaintainVO> excelVOList, BindingResult bindingResult) {
+	public R importPlantMaintain(@RequestExcel List<PlantMaintainVO> excelVOList, BindingResult bindingResult) throws Exception {
 		return plantMaintainService.importPlantMaintain(excelVOList, bindingResult);
 	}
 

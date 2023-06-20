@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userName"    column="user_name"    />
         <result property="auditTime"    column="audit_time"    />
         <result property="allocationTime"    column="allocation_time"    />
+        <result property="ipType"    column="ip_type"    />
     </resultMap>
 
 	<resultMap type="com.tdkj.tdcloud.admin.api.vo.MasterDataVO" id="MasterDataResultVO">
@@ -29,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
     <sql id="selectMasterDataVo">
-        select id, Item_type,allocation_time, create_time,audit_time,user_id,user_name, audit_status, allocation_status, submit_time, is_delete from master_data
+        select id, Item_type,allocation_time,ip_type, create_time,audit_time,user_id,user_name, audit_status, allocation_status, submit_time, is_delete from master_data
     </sql>
 
 	<sql id="selectExportMasterDataVo">
@@ -39,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResult">
         <include refid="selectMasterDataVo"/>
         <where>
-			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
+			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1','3')</if>
 			<if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
 			<if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
             <if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
@@ -58,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectExportMasterDataList" parameterType="com.tdkj.tdcloud.admin.api.dto.MasterDataDto" resultMap="MasterDataResultVO">
 		<include refid="selectExportMasterDataVo"/>
 		<where>
-			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
+			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1','3')</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
 			<if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
@@ -83,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(id) from master_data
 
 		<where>
-			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1')</if>
+			<if test="auditType != null  and auditType != ''"> and audit_status not in ('0','1','3')</if>
 			<if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
 			<if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
 			<if test="itemType != null  and itemType != ''"> and Item_type = #{itemType}</if>
@@ -139,6 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null">user_name,</if>
             <if test="auditTime != null">audit_time,</if>
             <if test="allocationTime != null">allocation_time,</if>
+            <if test="ipType != null">ip_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="itemType != null">#{itemType},</if>
@@ -151,6 +153,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null">#{userName},</if>
             <if test="auditTime != null">#{auditTime},</if>
             <if test="allocationTime != null">#{allocationTime},</if>
+            <if test="ipType != null">#{ipType},</if>
          </trim>
     </insert>
 
@@ -166,6 +169,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null">user_name = #{userName},</if>
             <if test="auditTime != null">audit_time = #{auditTime},</if>
             <if test="allocationTime != null">allocation_time = #{allocationTime},</if>
+            <if test="ipType != null">ip_type = #{ipType},</if>
         </trim>
         where id = #{id}
     </update>

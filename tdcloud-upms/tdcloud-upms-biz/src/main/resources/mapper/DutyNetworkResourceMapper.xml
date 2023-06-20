@@ -109,6 +109,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from duty_network_resource where id = #{id}
     </delete>
 
+	<delete id="deleteDutyNetworkResourceByMenuTypeId" parameterType="Long">
+		delete from duty_network_resource where menu_type_id = #{menuTypeId}
+	</delete>
+
     <delete id="deleteDutyNetworkResourceByIds" parameterType="String">
         delete from duty_network_resource where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">

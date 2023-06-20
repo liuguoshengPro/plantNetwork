@@ -55,6 +55,7 @@ public interface IpGradingReportMapper
      * @return 结果
      */
     public int deleteIpGradingReportById(Long id);
+    public int deleteIpGradingReportByMasterId(Long masterId);
 
     /**
      * 批量删除网络安全等级保护定级报告

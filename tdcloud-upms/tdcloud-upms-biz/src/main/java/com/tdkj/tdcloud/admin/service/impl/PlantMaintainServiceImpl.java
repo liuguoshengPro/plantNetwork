@@ -38,6 +38,8 @@ import com.tdkj.tdcloud.common.excel.vo.ErrorMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.validation.BindingResult;
 
 import javax.annotation.Resource;
@@ -349,23 +351,57 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 		return R.ok(plantMaintainMapper.insertPlantMaintain(plantMaintain));
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult) {
+	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult) throws Exception {
 		// 通用校验获取失败的数据
 		List<ErrorMessage> errorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
-
-		List<DictItem> maintain_type = plantMaintainMapper.selectDictItemList("maintain_type");
-		// 执行数据插入操作 组装
-		for (PlantMaintainVO excel : excelVOList) {
-			for (DictItem di :maintain_type){
-				if (di.getLabel().equals(excel.getMaintainProblem())){
-					excel.setMaintainProblem(di.getValue());
+		try {
+			List<DictItem> maintain_type = plantMaintainMapper.selectDictItemList("maintain_type");
+			// 执行数据插入操作 组装
+			for (PlantMaintainVO excel : excelVOList) {
+				if (excel.getMaintainTime()==null || "".equals(excel.getMaintainTime())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("维护时间不能为空");
 				}
-			}
-			excel.setCreateTime(new Date());
-			plantMaintainMapper.insertPlantMaintainVO(excel);
+				if (excel.getMaintainUnit()==null || "".equals(excel.getMaintainUnit())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("维护单位及人员不能为空");
+				}
+				if (excel.getSolution()==null || "".equals(excel.getSolution())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("解决办法不能为空");
+				}
+				if (excel.getMaintainContent()==null || "".equals(excel.getMaintainContent())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("维护内容不能为空");
+				}
+				if (excel.getMaintainUser()==null || "".equals(excel.getMaintainUser())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("维护人员不能为空");
+				}
+				if (excel.getMaintainProblem()==null || "".equals(excel.getMaintainProblem())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("维护问题不能为空");
+				}
+				if (excel.getIsSolve()==null || "".equals(excel.getIsSolve())){
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//手动回滚
+					return R.failed("问题是否解决不能为空");
+				}
+				for (DictItem di :maintain_type){
+					if (di.getLabel().equals(excel.getMaintainProblem())){
+						excel.setMaintainProblem(di.getValue());
+					}
+				}
+				excel.setCreateTime(new Date());
+				plantMaintainMapper.insertPlantMaintainVO(excel);
 
+			}
+		}catch (Exception e){
+
+			throw new Exception("导入数据失败");
 		}
+
 		if (CollUtil.isNotEmpty(errorMessageList)) {
 			return R.failed(errorMessageList);
 		}
@@ -393,6 +429,8 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 		Map<String,Object> map = new HashMap<>();
 		QueryWrapper<PlantMaintain> wrapper = new QueryWrapper<>();
 		wrapper.like(StringUtils.isNotBlank(plantMaintainDTO.getMaintainProblem()), "maintain_problem", plantMaintainDTO.getMaintainProblem());
+		wrapper.like(StringUtils.isNotBlank(plantMaintainDTO.getMaintainContent()), "maintain_content", plantMaintainDTO.getMaintainContent());
+		wrapper.like(StringUtils.isNotBlank(plantMaintainDTO.getSolution()), "solution", plantMaintainDTO.getSolution());
 
 		//日期戳
 		if (ArrayUtil.isNotEmpty(plantMaintainDTO.getMaintainTime())) {

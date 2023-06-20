@@ -133,4 +133,13 @@ public class MasterDataController
 		return masterDataService.auditSendEmail(checkReason);
 	}
 
+	/**
+	 * 删除
+	 * @param id
+	 * @return
+	 */
+	@DeleteMapping("/deleteMasterDataById")
+	public R deleteMasterDataById(@RequestParam("id")Long id){
+		return masterDataService.deleteMasterDataById(id);
+	}
 }

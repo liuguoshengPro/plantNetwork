@@ -49,4 +49,6 @@ public class CheckReason
 	private MenuTypeDto menuTypeDtoAgreement;
 
 	private IpGradingReportDTO ipGradingReportDTO;
+
+	private IpAgreement ipAgreement;
 }

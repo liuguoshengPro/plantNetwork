@@ -56,6 +56,7 @@ public interface DutyNetworkResourceMapper
      * @return 结果
      */
     public int deleteDutyNetworkResourceById(Long id);
+    public int deleteDutyNetworkResourceByMenuTypeId(Long menuTypeId);
 
     /**
      * 批量删除责任书中网络资源

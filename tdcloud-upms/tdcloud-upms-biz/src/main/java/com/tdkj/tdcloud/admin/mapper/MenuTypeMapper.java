@@ -26,11 +26,13 @@ public interface MenuTypeMapper
      */
     public MenuType selectMenuTypeById(Long id);
     public MenuType selectMenuTypeByMasterId(@Param("masterId") Long masterId,@Param("applyType")String applyType);
+    public List<MenuType> selectDeleteMenuTypeByMasterId(@Param("masterId") Long masterId);
     public int selectMenuTypeByMasterIdTotal(@Param("masterId") Long masterId);
     public int updateChargeStandard(ChargeStandard chargeStandard);
     public int insertChargeStandard(ChargeStandard chargeStandard);
     public List<ChargeStandard> selectChargeStandardList(String itemType);
     public Double selectChargeStandardByItemType(@Param("configuration")String configuration,@Param("itemType")String itemType);
+    public Double selectChargeStandardByIpItemType(@Param("itemType")String itemType);
     public int deleteChargeStandardId(Long id);
 
     /**
@@ -68,6 +70,7 @@ public interface MenuTypeMapper
      * @return 结果
      */
     public int deleteMenuTypeById(Long id);
+    public int deleteMenuTypeByMasterId(Long masterId);
 
     /**
      * 批量删除主数据下两张数据

@@ -51,6 +51,9 @@ public class MenuTypeServiceImpl implements MenuTypeService
 	private IpGradingReportMapper ipGradingReportMapper;
 
     @Resource
+	private IpAgreementMapper ipAgreementMapper;
+
+    @Resource
 	private DomainNameApplyMapper domainNameApplyMapper;
 
     @Resource
@@ -103,28 +106,28 @@ public class MenuTypeServiceImpl implements MenuTypeService
 		}else {
 			int i = menuTypeMapper.updateMenuType(menuTypeDto);
 			if (i==1){
-				if ("checkReason".equals(menuTypeDto.getCheckReasonType())){
-					if (menuTypeDto.getDutyApplyReasonList().size()>0){
-						for (DutyApplyReason dar:menuTypeDto.getDutyApplyReasonList()){
-							dutyApplyReasonMapper.updateDutyApplyReason(dar);
-						}
-					}
-					if (menuTypeDto.getDutyNetworkResourceList().size()>0){
-						for (DutyNetworkResource dnr:menuTypeDto.getDutyNetworkResourceList()){
-							if (dnr.getIntranetIp()==null || "".equals(dnr.getIntranetIp())){
-								return R.failed(i,"请填写内网ip");
-							}
-							if (dnr.getExtranetIp()==null || "".equals(dnr.getExtranetIp())){
-								return R.failed(i,"请填写外网ip");
-							}
-							if (dnr.getDomainName()==null || "".equals(dnr.getDomainName())){
-								return R.failed(i,"请填写域名");
-							}
-							dutyNetworkResourceMapper.updateDutyNetworkResource(dnr);
-						}
-					}
-					return R.ok(i,"已审核");
-				}else {
+//				if ("checkReason".equals(menuTypeDto.getCheckReasonType())){
+//					if (menuTypeDto.getDutyApplyReasonList().size()>0){
+//						for (DutyApplyReason dar:menuTypeDto.getDutyApplyReasonList()){
+//							dutyApplyReasonMapper.updateDutyApplyReason(dar);
+//						}
+//					}
+//					if (menuTypeDto.getDutyNetworkResourceList().size()>0){
+//						for (DutyNetworkResource dnr:menuTypeDto.getDutyNetworkResourceList()){
+//							if (dnr.getIntranetIp()==null || "".equals(dnr.getIntranetIp())){
+//								return R.failed(i,"请填写内网ip");
+//							}
+//							if (dnr.getExtranetIp()==null || "".equals(dnr.getExtranetIp())){
+//								return R.failed(i,"请填写外网ip");
+//							}
+//							if (dnr.getDomainName()==null || "".equals(dnr.getDomainName())){
+//								return R.failed(i,"请填写域名");
+//							}
+//							dutyNetworkResourceMapper.updateDutyNetworkResource(dnr);
+//						}
+//					}
+//					return R.ok(i,"已审核");
+//				}else {
 					if (menuTypeDto.getDutyApplyReasonList().size()>0){
 						for (DutyApplyReason dar:menuTypeDto.getDutyApplyReasonList()){
 							if (dar.getId()==null){
@@ -135,7 +138,7 @@ public class MenuTypeServiceImpl implements MenuTypeService
 							}else {
 								dutyApplyReasonMapper.updateDutyApplyReason(dar);
 							}
-						}
+//						}
 					}
 					if (menuTypeDto.getDutyNetworkResourceList().size()>0){
 						for (DutyNetworkResource dnr:menuTypeDto.getDutyNetworkResourceList()){
@@ -214,25 +217,25 @@ public class MenuTypeServiceImpl implements MenuTypeService
 		}else {
 			int i = menuTypeMapper.updateMenuType(menuTypeDto);
 			if (i==1){
-				if ("checkReason".equals(menuTypeDto.getCheckReasonType())){
-					if (menuTypeDto.getAgreementResourceList().size()>0){
-						for (AgreementResource ar:menuTypeDto.getAgreementResourceList()){
-							if (ar.getIpAddress() == null || "".equals(ar.getIpAddress())){
-								return R.failed(i,"请填写ip地址");
-							}
-							agreementResourceMapper.updateAgreementResource(ar);
-
-						}
-					}
-					if (menuTypeDto.getAgreementListList().size()>0){
-						for (AgreementList al:menuTypeDto.getAgreementListList()){
-
-							agreementListMapper.updateAgreementList(al);
-
-						}
-					}
-					return R.ok(i,"已审核");
-				}else {
+//				if ("checkReason".equals(menuTypeDto.getCheckReasonType())){
+//					if (menuTypeDto.getAgreementResourceList().size()>0){
+//						for (AgreementResource ar:menuTypeDto.getAgreementResourceList()){
+//							if (ar.getIpAddress() == null || "".equals(ar.getIpAddress())){
+//								return R.failed(i,"请填写ip地址");
+//							}
+//							agreementResourceMapper.updateAgreementResource(ar);
+//
+//						}
+//					}
+//					if (menuTypeDto.getAgreementListList().size()>0){
+//						for (AgreementList al:menuTypeDto.getAgreementListList()){
+//
+//							agreementListMapper.updateAgreementList(al);
+//
+//						}
+//					}
+//					return R.ok(i,"已审核");
+//				}else {
 					if (menuTypeDto.getAgreementResourceList().size()>0){
 						for (AgreementResource ar:menuTypeDto.getAgreementResourceList()){
 							if (ar.getId()==null){
@@ -243,7 +246,7 @@ public class MenuTypeServiceImpl implements MenuTypeService
 							}else {
 								agreementResourceMapper.updateAgreementResource(ar);
 							}
-						}
+//						}
 					}
 					if (menuTypeDto.getAgreementListList().size()>0){
 						for (AgreementList al:menuTypeDto.getAgreementListList()){
@@ -294,12 +297,50 @@ public class MenuTypeServiceImpl implements MenuTypeService
 				return R.failed();
 			}
 		}else {
-			if ("checkReason".equals(ipGradingReportDTO.getCheckReasonType())){
-				if ("".equals(ipGradingReportDTO.getIpAddress()) || ipGradingReportDTO.getIpAddress()==null){
-					return R.failed(1,"请配置资源");
-				}
-			}
+//			if ("checkReason".equals(ipGradingReportDTO.getCheckReasonType())){
+//				if ("".equals(ipGradingReportDTO.getIpAddress()) || ipGradingReportDTO.getIpAddress()==null){
+//					return R.failed(1,"请配置资源");
+//				}
+//			}
     		int i = ipGradingReportMapper.updateIpGradingReport(ipGradingReportDTO);
+			if (i==1){
+
+				return R.ok(i,"修改成功");
+			}else {
+				return R.failed();
+			}
+		}
+	}
+
+	@Override
+	public R saveIpAgreement(IpAgreement ipAgreement) {
+    	if (ipAgreement.getMasterId()==null || "".equals(ipAgreement.getMasterId())){
+    		return R.failed("一级id不能为空");
+		}
+		if (ipAgreement.getId()==null){
+			ipAgreement.setCreateTime(new Date());
+			int i = ipAgreementMapper.insertIpAgreement(ipAgreement);
+			if (i==1){
+				return R.ok(i,"添加成功");
+			}else {
+				return R.failed();
+			}
+		}else {
+//			if ("checkReason".equals(ipAgreement.getCheckReasonType())){
+//				if ("".equals(ipAgreement.getIp()) || ipAgreement.getIp()==null){
+//					return R.failed(1,"请配置资源");
+//				}
+//				if ("".equals(ipAgreement.getSubnetMask()) || ipAgreement.getSubnetMask()==null){
+//					return R.failed(1,"请配置资源");
+//				}
+//				if ("".equals(ipAgreement.getGateway()) || ipAgreement.getGateway()==null){
+//					return R.failed(1,"请配置资源");
+//				}
+//				if ("".equals(ipAgreement.getDns()) || ipAgreement.getDns()==null){
+//					return R.failed(1,"请配置资源");
+//				}
+//			}
+			int i = ipAgreementMapper.updateIpAgreement(ipAgreement);
 			if (i==1){
 
 				return R.ok(i,"修改成功");
@@ -410,11 +451,16 @@ public class MenuTypeServiceImpl implements MenuTypeService
 		if (menuTypeDto.getPlatformNum()==0 || menuTypeDto.getPlatformNum()<0){
 			return R.failed("请选择正确台数");
 		}
-
-		if (menuTypeDto.getConfiguration()==null || "".equals(menuTypeDto.getConfiguration())){
-			return R.failed("请选择配置");
+		double chargeStandard = 0;
+		if (!"ip".equals(menuTypeDto.getItemType())){
+			if (menuTypeDto.getConfiguration()==null || "".equals(menuTypeDto.getConfiguration())){
+				return R.failed("请选择配置");
+			}
+			chargeStandard = menuTypeMapper.selectChargeStandardByItemType(menuTypeDto.getConfiguration(),menuTypeDto.getItemType());
+		}else {
+			chargeStandard = menuTypeMapper.selectChargeStandardByIpItemType(menuTypeDto.getItemType());
 		}
-		double chargeStandard = menuTypeMapper.selectChargeStandardByItemType(menuTypeDto.getConfiguration(),menuTypeDto.getItemType());
+
 
 		BigDecimal cs = new BigDecimal(chargeStandard);//服务费
 		BigDecimal paymentMethod = cs.multiply(new BigDecimal(monthsBetween)).multiply(new BigDecimal(menuTypeDto.getPlatformNum()));

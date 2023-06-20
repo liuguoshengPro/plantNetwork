@@ -31,4 +31,5 @@ public interface MasterDataService
 	R updateMasterDataAllocationStatus(Long masterId);
 	R getMasterStatistics(String year);
 	R auditSendEmail(CheckReason checkReason);
+	R deleteMasterDataById(Long id);
 }

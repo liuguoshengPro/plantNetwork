@@ -148,6 +148,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from ip_grading_report where id = #{id}
     </delete>
 
+	<delete id="deleteIpGradingReportByMasterId" parameterType="Long">
+		delete from ip_grading_report where master_id = #{masterId}
+	</delete>
+
     <delete id="deleteIpGradingReportByIds" parameterType="String">
         delete from ip_grading_report where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">

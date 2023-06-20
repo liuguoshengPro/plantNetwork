@@ -62,6 +62,10 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 	@Resource
 	private IpGradingReportMapper ipGradingReportMapper;
+
+	@Resource
+	private IpAgreementMapper ipAgreementMapper;
+
 	@Resource
 	private DomainNameApplyMapper domainNameApplyMapper;
 
@@ -97,7 +101,10 @@ public class MasterDataServiceImpl implements MasterDataService {
 					agreement.setAgreementResourceList(agreementResourceList);
 					agreement.setAgreementListList(agreementListList);
 				}
-
+				IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpReportByMasterId(masterData2.getId());
+				if (ipGradingReport!=null){
+					map.put("ipGradingReport", ipGradingReport);
+				}
 				map.put("masterData2", masterData2);
 				map.put("menuType", menuType);
 				map.put("agreement", agreement);
@@ -122,7 +129,10 @@ public class MasterDataServiceImpl implements MasterDataService {
 					idcAgreement.setAgreementResourceList(agreementResourceList);
 					idcAgreement.setAgreementListList(agreementListList);
 				}
-
+				IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpReportByMasterId(masterData2.getId());
+				if (ipGradingReport!=null){
+					map.put("ipGradingReport", ipGradingReport);
+				}
 				map.put("masterData2", masterData2);
 				map.put("idcDuty", idcDuty);
 				map.put("idcAgreement", idcAgreement);
@@ -142,10 +152,18 @@ public class MasterDataServiceImpl implements MasterDataService {
 					ipDuty.setDutyNetworkResourceList(dutyNetworkResources);
 				}
 				IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpReportByMasterId(masterData2.getId());
+				if (ipGradingReport!=null){
+					map.put("ipGradingReport", ipGradingReport);
+				}
 
+				IpAgreement ipAgreement = ipAgreementMapper.selectIpAgreementByMasterId(masterData2.getId());
+				if (ipAgreement!=null){
+					map.put("ipAgreement", ipAgreement);
+				}
 				map.put("masterData2", masterData2);
 				map.put("ipDuty", ipDuty);
-				map.put("ipGradingReport", ipGradingReport);
+
+
 				return R.ok(map, "您有待提交事项");
 			}
 		}
@@ -221,17 +239,36 @@ public class MasterDataServiceImpl implements MasterDataService {
 			for (MasterData md : masterDataListNew) {
 
 				String dutyApplyType = "";
+				String agreementApplyType = "";
 				if ("cloud".equals(md.getItemType())) {
 					dutyApplyType = "safe";
+					agreementApplyType = "agreement";
 				} else if ("idc".equals(md.getItemType())) {
 					dutyApplyType = "idcSafe";
+					agreementApplyType = "idcAgreement";
 				} else if ("ip".equals(md.getItemType())) {
 					dutyApplyType = "ipSafe";
+					agreementApplyType = "ipApplyAgreement";
+//					IpAgreement ipApplyAgreement = ipAgreementMapper.selectIpAgreementByMasterIdAndApplyType(md.getId(), "ipApplyAgreement");
+//					md.setExpireTime(ipApplyAgreement.getEndTime());
 				}else {
 					dutyApplyType = "domainType";
 				}
 
 				MenuType safe = menuTypeMapper.selectMenuTypeByMasterId(md.getId(), dutyApplyType);
+				if ("ipApplyAgreement".equals(agreementApplyType)){
+					IpAgreement ipApplyAgreement = ipAgreementMapper.selectIpAgreementByMasterIdAndApplyType(md.getId(), agreementApplyType);
+					if (ipApplyAgreement!=null){
+						md.setExpireTime(ipApplyAgreement.getEndTime());
+					}
+				}else {
+					MenuType agreement = menuTypeMapper.selectMenuTypeByMasterId(md.getId(), agreementApplyType);
+					if (agreement!=null){
+						md.setExpireTime(agreement.getEndTime());
+					}
+
+				}
+
 				String intranetIp = "";//内网ip
 				String extranetIp = "";//外网ip
 				String domainName = "";//域名
@@ -300,14 +337,24 @@ public class MasterDataServiceImpl implements MasterDataService {
 		if ("cloud".equals(masterData.getItemType())) {
 			dutyApplyType = "safe";
 			agreementApplyType = "agreement";
+			IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpReportByMasterId(id);
+			map.put("ipGradingReport", ipGradingReport);
 		} else if ("idc".equals(masterData.getItemType())) {
 			dutyApplyType = "idcSafe";
 			agreementApplyType = "idcAgreement";
+			IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpReportByMasterId(id);
+			map.put("ipGradingReport", ipGradingReport);
 		} else if ("ip".equals(masterData.getItemType())) {
 			dutyApplyType = "ipSafe";
 			agreementApplyType = "ipAgreement";
 			IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpReportByMasterId(id);
 			map.put("ipGradingReport", ipGradingReport);
+			IpAgreement ipAgreement = ipAgreementMapper.selectIpAgreementByMasterId(id);
+			if (ipAgreement!=null){
+				String dept = masterDataMapper.selectSysDeptById(Long.valueOf(ipAgreement.getThematicGroup()));
+				ipAgreement.setThematicGroupName(dept);
+			}
+			map.put("ipAgreement", ipAgreement);
 		} else if ("domain".equals(masterData.getItemType())) {
 			MenuType domainNameApply = menuTypeMapper.selectMenuTypeByMasterId(masterData.getId(), "domainType");
 			if (domainNameApply!=null){
@@ -432,46 +479,52 @@ public class MasterDataServiceImpl implements MasterDataService {
 			}
 		}
 
-		if ("2".equals(checkReason.getIsAgree())) {
-			if ("cloud".equals(checkReason.getItemType())){
-				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
-				int code = r.getCode();
-				if (code==1){
-					return R.failed(code,"请配置资源");
-				}
-				R r1 = menuTypeService.saveMenuApplyAgreement(checkReason.getMenuTypeDtoAgreement());
-				int code1 = r1.getCode();
-				if (code1==1){
-					return R.failed(code1,"请配置资源");
-				}
-			}
-
-			if ("ip".equals(checkReason.getItemType())){
-				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
-				int ipCode = r.getCode();
-				if (ipCode==1){
-					return R.failed(ipCode,"请配置资源");
-				}
-				R r1 = menuTypeService.saveMenuApplyIp(checkReason.getIpGradingReportDTO());
-				int ipCode1 = r1.getCode();
-				if (ipCode1==1){
-					return R.failed(ipCode1,"请配置资源");
-				}
-			}
-
-			if ("idc".equals(checkReason.getItemType())){
-				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
-				int idcCode = r.getCode();
-				if (idcCode==1){
-					return R.failed(idcCode,"请配置资源");
-				}
-				R r1 = menuTypeService.saveMenuApplyAgreement(checkReason.getMenuTypeDtoAgreement());
-				int idcCode1 = r1.getCode();
-				if (idcCode1==1){
-					return R.failed(idcCode1,"请配置资源");
-				}
-			}
-		}
+//		if ("2".equals(checkReason.getIsAgree())) {
+//			if ("cloud".equals(checkReason.getItemType())){
+//				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
+//				int code = r.getCode();
+//				if (code==1){
+//					return R.failed(code,"请配置资源");
+//				}
+//				R r1 = menuTypeService.saveMenuApplyAgreement(checkReason.getMenuTypeDtoAgreement());
+//				int code1 = r1.getCode();
+//				if (code1==1){
+//					return R.failed(code1,"请配置资源");
+//				}
+//			}
+//
+//			if ("ip".equals(checkReason.getItemType())){
+//				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
+//				int ipCode = r.getCode();
+//				if (ipCode==1){
+//					return R.failed(ipCode,"请配置资源");
+//				}
+//				R r1 = menuTypeService.saveMenuApplyIp(checkReason.getIpGradingReportDTO());
+//				int ipCode1 = r1.getCode();
+//				if (ipCode1==1){
+//					return R.failed(ipCode1,"请配置资源");
+//				}
+//
+//				R r2 = menuTypeService.saveIpAgreement(checkReason.getIpAgreement());
+//				int ipCode2 = r2.getCode();
+//				if (ipCode2==1){
+//					return R.failed(ipCode2,"请配置资源");
+//				}
+//			}
+//
+//			if ("idc".equals(checkReason.getItemType())){
+//				R r = menuTypeService.saveMenuApplyNetwork(checkReason.getMenuTypeDto());
+//				int idcCode = r.getCode();
+//				if (idcCode==1){
+//					return R.failed(idcCode,"请配置资源");
+//				}
+//				R r1 = menuTypeService.saveMenuApplyAgreement(checkReason.getMenuTypeDtoAgreement());
+//				int idcCode1 = r1.getCode();
+//				if (idcCode1==1){
+//					return R.failed(idcCode1,"请配置资源");
+//				}
+//			}
+//		}
 		checkReason.setCreateTime(new Date());
 		checkReason.setUpdateTime(new Date());
 
@@ -715,6 +768,26 @@ public class MasterDataServiceImpl implements MasterDataService {
 			return R.ok("发送成功");
 		}
 		return R.ok("发送成功");
+	}
+
+	@Override
+	public R deleteMasterDataById(Long id) {
+		List<MenuType> menuTypeList = menuTypeMapper.selectDeleteMenuTypeByMasterId(id);
+		int i = masterDataMapper.deleteMasterDataById(id);
+		if (i==1){
+			menuTypeList.stream().forEach(menuType -> {
+				agreementListMapper.deleteAgreementListByMenuTypeId(menuType.getId());
+				agreementResourceMapper.deleteAgreementResourceByMenuTypeId(menuType.getId());
+				dutyNetworkResourceMapper.deleteDutyNetworkResourceByMenuTypeId(menuType.getId());
+				dutyApplyReasonMapper.deleteDutyApplyReasonByMenuTypeId(menuType.getId());
+			});
+			menuTypeMapper.deleteMenuTypeByMasterId(id);
+			domainNameApplyMapper.deleteDomainNameApplyByMasterId(id);
+			ipGradingReportMapper.deleteIpGradingReportByMasterId(id);
+			ipAgreementMapper.deleteIpAgreementByMasterId(id);
+			return R.ok("删除成功");
+		}
+		return null;
 	}
 
 }

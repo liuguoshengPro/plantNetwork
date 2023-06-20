@@ -54,6 +54,7 @@ public interface DutyApplyReasonMapper
      * @return 结果
      */
     public int deleteDutyApplyReasonById(Long id);
+    public int deleteDutyApplyReasonByMenuTypeId(Long menuTypeId);
 
     /**
      * 批量删除责任书申请理由

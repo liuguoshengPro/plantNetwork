@@ -78,6 +78,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from duty_apply_reason where id = #{id}
     </delete>
 
+	<delete id="deleteDutyApplyReasonByMenuTypeId" parameterType="Long">
+		delete from duty_apply_reason where menu_type_id = #{menuTypeId}
+	</delete>
     <delete id="deleteDutyApplyReasonByIds" parameterType="String">
         delete from duty_apply_reason where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">

@@ -108,6 +108,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from domain_name_apply where id = #{id}
     </delete>
 
+	<delete id="deleteDomainNameApplyByMasterId" parameterType="Long">
+		delete from domain_name_apply where master_id = #{masterId}
+	</delete>
+
     <delete id="deleteDomainNameApplyByIds" parameterType="String">
         delete from domain_name_apply where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">

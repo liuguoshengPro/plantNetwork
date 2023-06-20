@@ -40,7 +40,7 @@ public interface PlantMaintainService extends IService<PlantMaintain> {
 	public R deletePlantMaintain(List<Long> idList);
 	public R getDictItemList();
 	public R addPlantMaintain(PlantMaintain plantMaintain);
-	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult);
+	public R importPlantMaintain(List<PlantMaintainVO> excelVOList, BindingResult bindingResult) throws Exception;
 	public List<PlantMaintainVO> exportPlantMaintain(PlantMaintainDTO plantMaintainDTO);
 
 	R getPlantMaintainList(Page page, PlantMaintainDTO plantMaintainDTO);

@@ -54,6 +54,7 @@ public interface AgreementResourceMapper
      * @return 结果
      */
     public int deleteAgreementResourceById(Long id);
+    public int deleteAgreementResourceByMenuTypeId(Long menuTypeId);
 
     /**
      * 批量删除协议书资源

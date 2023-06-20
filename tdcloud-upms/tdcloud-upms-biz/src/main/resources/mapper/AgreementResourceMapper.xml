@@ -94,6 +94,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from agreement_resource where id = #{id}
     </delete>
 
+	<delete id="deleteAgreementResourceByMenuTypeId" parameterType="Long">
+		delete from agreement_resource where menu_type_id = #{menuTypeId}
+	</delete>
+
     <delete id="deleteAgreementResourceByIds" parameterType="String">
         delete from agreement_resource where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">

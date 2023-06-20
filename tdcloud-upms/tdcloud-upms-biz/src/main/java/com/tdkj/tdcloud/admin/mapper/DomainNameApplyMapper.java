@@ -55,6 +55,7 @@ public interface DomainNameApplyMapper
      * @return 结果
      */
     public int deleteDomainNameApplyById(Long id);
+    public int deleteDomainNameApplyByMasterId(Long masterId);
 
     /**
      * 批量删除DNS域名解析申请

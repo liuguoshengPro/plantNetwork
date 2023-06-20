@@ -61,4 +61,7 @@ public class MasterData
 	/** ip地址 */
 	private String ipAddress;
 
+	private Date expireTime;
+	private String ipType;
+
 }

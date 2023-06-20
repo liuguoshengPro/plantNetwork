@@ -73,6 +73,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		and item_type = #{itemType}
 	</select>
 
+	<select id="selectChargeStandardByIpItemType" resultType="Double">
+		SELECT charge_standard FROM charge_standard where item_type = #{itemType}
+	</select>
+
 	<delete id="deleteChargeStandardId" parameterType="Long">
 		delete from charge_standard where id = #{id}
 	</delete>
@@ -116,6 +120,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectMenuTypeByMasterIdTotal" resultType="integer">
 		select count(id) from menu_type
+		where master_id = #{masterId}
+	</select>
+
+	<select id="selectDeleteMenuTypeByMasterId" resultMap="MenuTypeResult">
+		<include refid="selectMenuTypeVo"/>
 		where master_id = #{masterId}
 	</select>
         
@@ -238,6 +247,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteMenuTypeById" parameterType="Long">
         delete from menu_type where id = #{id}
     </delete>
+
+	<delete id="deleteMenuTypeByMasterId" parameterType="Long">
+		delete from menu_type where master_id = #{masterId}
+	</delete>
 
     <delete id="deleteMenuTypeByIds" parameterType="String">
         delete from menu_type where id in 

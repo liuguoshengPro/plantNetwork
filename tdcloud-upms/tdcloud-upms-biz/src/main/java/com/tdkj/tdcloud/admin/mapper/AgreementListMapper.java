@@ -54,6 +54,7 @@ public interface AgreementListMapper
      * @return 结果
      */
     public int deleteAgreementListById(Long id);
+    public int deleteAgreementListByMenuTypeId(Long menuTypeId);
 
     /**
      * 批量删除申请协议书云主机清单

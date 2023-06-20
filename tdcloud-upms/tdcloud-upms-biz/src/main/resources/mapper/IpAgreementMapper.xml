@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdkj.tdcloud.admin.mapper.IpAgreementMapper">
+    
+    <resultMap type="com.tdkj.tdcloud.admin.api.entity.IpAgreement" id="IpAgreementResult">
+        <result property="id"    column="id"    />
+        <result property="secondParty"    column="second_party"    />
+        <result property="ipNum"    column="ip_num"    />
+        <result property="thematicGroup"    column="thematic_group"    />
+        <result property="projectLeader"    column="project_leader"    />
+        <result property="applicantUser"    column="applicant_user"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="usePosition"    column="use_position"    />
+        <result property="useType"    column="use_type"    />
+        <result property="ipUse"    column="ip_use"    />
+        <result property="ip"    column="ip"    />
+        <result property="subnetMask"    column="subnet_mask"    />
+        <result property="gateway"    column="gateway"    />
+        <result property="dns"    column="dns"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="chargeStandard"    column="charge_standard"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="paymentUppercase"    column="payment_uppercase"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="masterId"    column="master_id"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="applyType"    column="apply_type"    />
+        <result property="guarantee"    column="guarantee"    />
+    </resultMap>
+
+    <sql id="selectIpAgreementVo">
+        select id, second_party, ip_num,guarantee, thematic_group, project_leader, applicant_user, phone, email, use_position, use_type, ip_use, ip, subnet_mask, gateway, dns, start_time, end_time, charge_standard, payment_method, payment_uppercase, create_time, is_delete, master_id, item_type, apply_type from ip_agreement
+    </sql>
+
+    <select id="selectIpAgreementList" parameterType="com.tdkj.tdcloud.admin.api.entity.IpAgreement" resultMap="IpAgreementResult">
+        <include refid="selectIpAgreementVo"/>
+        <where>  
+            <if test="secondParty != null  and secondParty != ''"> and second_party = #{secondParty}</if>
+            <if test="ipNum != null "> and ip_num = #{ipNum}</if>
+            <if test="thematicGroup != null  and thematicGroup != ''"> and thematic_group = #{thematicGroup}</if>
+            <if test="projectLeader != null  and projectLeader != ''"> and project_leader = #{projectLeader}</if>
+            <if test="applicantUser != null  and applicantUser != ''"> and applicant_user = #{applicantUser}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="usePosition != null  and usePosition != ''"> and use_position = #{usePosition}</if>
+            <if test="useType != null  and useType != ''"> and use_type = #{useType}</if>
+            <if test="ipUse != null  and ipUse != ''"> and ip_use = #{ipUse}</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="subnetMask != null  and subnetMask != ''"> and subnet_mask = #{subnetMask}</if>
+            <if test="gateway != null  and gateway != ''"> and gateway = #{gateway}</if>
+            <if test="dns != null  and dns != ''"> and dns = #{dns}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="chargeStandard != null "> and charge_standard = #{chargeStandard}</if>
+            <if test="paymentMethod != null "> and payment_method = #{paymentMethod}</if>
+            <if test="paymentUppercase != null  and paymentUppercase != ''"> and payment_uppercase = #{paymentUppercase}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="masterId != null "> and master_id = #{masterId}</if>
+            <if test="itemType != null  and itemType != ''"> and item_type = #{itemType}</if>
+            <if test="applyType != null  and applyType != ''"> and apply_type = #{applyType}</if>
+        </where>
+    </select>
+    
+    <select id="selectIpAgreementByMasterId" parameterType="Long" resultMap="IpAgreementResult">
+        <include refid="selectIpAgreementVo"/>
+        where master_id = #{masterId}
+    </select>
+
+	<select id="selectIpAgreementByMasterIdAndApplyType" resultMap="IpAgreementResult">
+		<include refid="selectIpAgreementVo"/>
+		where master_id = #{masterId} and apply_type = #{applyType}
+	</select>
+
+	<select id="selectIpAgreementById" parameterType="Long" resultMap="IpAgreementResult">
+		<include refid="selectIpAgreementVo"/>
+		where id = #{id}
+	</select>
+        
+    <insert id="insertIpAgreement" parameterType="com.tdkj.tdcloud.admin.api.entity.IpAgreement">
+        insert into ip_agreement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="secondParty != null">second_party,</if>
+            <if test="ipNum != null">ip_num,</if>
+            <if test="thematicGroup != null">thematic_group,</if>
+            <if test="projectLeader != null">project_leader,</if>
+            <if test="applicantUser != null">applicant_user,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="usePosition != null">use_position,</if>
+            <if test="useType != null">use_type,</if>
+            <if test="ipUse != null">ip_use,</if>
+            <if test="ip != null">ip,</if>
+            <if test="subnetMask != null">subnet_mask,</if>
+            <if test="gateway != null">gateway,</if>
+            <if test="dns != null">dns,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="chargeStandard != null">charge_standard,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="paymentUppercase != null">payment_uppercase,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="masterId != null">master_id,</if>
+            <if test="itemType != null">item_type,</if>
+            <if test="applyType != null">apply_type,</if>
+            <if test="guarantee != null">guarantee,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="secondParty != null">#{secondParty},</if>
+            <if test="ipNum != null">#{ipNum},</if>
+            <if test="thematicGroup != null">#{thematicGroup},</if>
+            <if test="projectLeader != null">#{projectLeader},</if>
+            <if test="applicantUser != null">#{applicantUser},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="usePosition != null">#{usePosition},</if>
+            <if test="useType != null">#{useType},</if>
+            <if test="ipUse != null">#{ipUse},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="subnetMask != null">#{subnetMask},</if>
+            <if test="gateway != null">#{gateway},</if>
+            <if test="dns != null">#{dns},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="chargeStandard != null">#{chargeStandard},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="paymentUppercase != null">#{paymentUppercase},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="masterId != null">#{masterId},</if>
+            <if test="itemType != null">#{itemType},</if>
+            <if test="applyType != null">#{applyType},</if>
+            <if test="guarantee != null">#{guarantee},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIpAgreement" parameterType="com.tdkj.tdcloud.admin.api.entity.IpAgreement">
+        update ip_agreement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="secondParty != null">second_party = #{secondParty},</if>
+            <if test="ipNum != null">ip_num = #{ipNum},</if>
+            <if test="thematicGroup != null">thematic_group = #{thematicGroup},</if>
+            <if test="projectLeader != null">project_leader = #{projectLeader},</if>
+            <if test="applicantUser != null">applicant_user = #{applicantUser},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="usePosition != null">use_position = #{usePosition},</if>
+            <if test="useType != null">use_type = #{useType},</if>
+            <if test="ipUse != null">ip_use = #{ipUse},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="subnetMask != null">subnet_mask = #{subnetMask},</if>
+            <if test="gateway != null">gateway = #{gateway},</if>
+            <if test="dns != null">dns = #{dns},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="chargeStandard != null">charge_standard = #{chargeStandard},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="paymentUppercase != null">payment_uppercase = #{paymentUppercase},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="masterId != null">master_id = #{masterId},</if>
+            <if test="itemType != null">item_type = #{itemType},</if>
+            <if test="applyType != null">apply_type = #{applyType},</if>
+            <if test="guarantee != null">guarantee = #{guarantee},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteIpAgreementById" parameterType="Long">
+        delete from ip_agreement where id = #{id}
+    </delete>
+
+	<delete id="deleteIpAgreementByMasterId" parameterType="Long">
+		delete from ip_agreement where master_id = #{masterId}
+	</delete>
+
+    <delete id="deleteIpAgreementByIds" parameterType="String">
+        delete from ip_agreement where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

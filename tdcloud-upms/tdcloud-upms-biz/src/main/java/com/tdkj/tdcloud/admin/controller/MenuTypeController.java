@@ -6,6 +6,7 @@ import com.tdkj.tdcloud.admin.api.dto.DomainNameApplyDTO;
 import com.tdkj.tdcloud.admin.api.dto.IpGradingReportDTO;
 import com.tdkj.tdcloud.admin.api.dto.MenuTypeDto;
 import com.tdkj.tdcloud.admin.api.entity.ChargeStandard;
+import com.tdkj.tdcloud.admin.api.entity.IpAgreement;
 import com.tdkj.tdcloud.admin.api.entity.MenuType;
 import com.tdkj.tdcloud.admin.api.entity.UseDescription;
 import com.tdkj.tdcloud.admin.service.MenuTypeService;
@@ -61,6 +62,16 @@ public class MenuTypeController
 	@PostMapping("/saveMenuApplyIp")
 	public R saveMenuApplyIp(@RequestBody IpGradingReportDTO ipGradingReportDTO){
 		return menuTypeService.saveMenuApplyIp(ipGradingReportDTO);
+	}
+
+	/**
+	 * ip协议书保存
+	 * @param ipAgreement
+	 * @return
+	 */
+	@PostMapping("/saveIpAgreement")
+	public R saveIpAgreement(@RequestBody IpAgreement ipAgreement){
+		return menuTypeService.saveIpAgreement(ipAgreement);
 	}
 
 	/**
