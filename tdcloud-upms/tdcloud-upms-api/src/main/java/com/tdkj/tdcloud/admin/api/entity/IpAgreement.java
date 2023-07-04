@@ -97,4 +97,5 @@ public class IpAgreement
 	private String checkReasonType;
 	//ip申请保证书
 	private String guarantee;
+	private String ipType;
 }

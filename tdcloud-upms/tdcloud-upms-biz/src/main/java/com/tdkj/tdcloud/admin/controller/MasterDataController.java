@@ -2,6 +2,7 @@ package com.tdkj.tdcloud.admin.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -99,9 +100,9 @@ public class MasterDataController
 
 	@GetMapping("/exportWordMasterData")
 //	@PreAuthorize("@pms.hasPermission('sys_post_export')")
-	public void exportWordMasterData(String applyType,Long menuTypeId, HttpServletResponse response) throws IOException {
+	public void exportWordMasterData(String applyType,Long menuTypeId,String ipType, HttpServletResponse response) throws IOException {
 
-		masterDataService.exportWordMasterData(applyType,menuTypeId,response);
+		masterDataService.exportWordMasterData(applyType,menuTypeId,ipType,response);
 	}
 
 	@PostMapping("/addCheckReason")
@@ -131,6 +132,11 @@ public class MasterDataController
 	@PostMapping("/auditSendEmail")
 	public R auditSendEmail(@RequestBody CheckReason checkReason) {
 		return masterDataService.auditSendEmail(checkReason);
+	}
+
+	@PostMapping("/expireSendEmail")
+	public R expireSendEmail(@RequestBody CheckReason checkReason) throws ParseException {
+		return masterDataService.expireSendEmail(checkReason);
 	}
 
 	/**

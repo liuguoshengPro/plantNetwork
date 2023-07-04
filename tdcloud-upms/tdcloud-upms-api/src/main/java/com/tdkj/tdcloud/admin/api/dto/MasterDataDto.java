@@ -73,4 +73,5 @@ public class MasterDataDto
 	private String authority;
 
 	private String ipType;
+	private String isExpire;
 }

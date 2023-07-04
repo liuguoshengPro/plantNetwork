@@ -60,8 +60,10 @@ public class MasterData
 
 	/** ip地址 */
 	private String ipAddress;
-
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
 	private Date expireTime;
+
 	private String ipType;
+	private String isExpire;
 
 }

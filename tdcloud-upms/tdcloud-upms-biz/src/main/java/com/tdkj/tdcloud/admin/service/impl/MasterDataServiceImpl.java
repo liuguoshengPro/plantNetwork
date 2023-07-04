@@ -3,7 +3,10 @@ package com.tdkj.tdcloud.admin.service.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,6 +74,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 	@Resource
 	private MenuTypeService menuTypeService;
+
 
 	@Transactional
 	@Override
@@ -195,6 +199,8 @@ public class MasterDataServiceImpl implements MasterDataService {
 	@Override
 	public R submitMasterData(MasterData masterData) {
 		masterData.setSubmitTime(new Date());
+		masterData.setAllocationStatus("0");
+		masterData.setAllocationTime(null);
 		int i = masterDataMapper.updateMasterData(masterData);
 
 		return R.ok("成功");
@@ -268,7 +274,20 @@ public class MasterDataServiceImpl implements MasterDataService {
 					}
 
 				}
+				if (md.getExpireTime()!=null){
+					//到期时间
+					long specifiedTimeInMillis = md.getExpireTime().getTime();
 
+					// 当前时间
+					long currentTimeInMillis = System.currentTimeMillis();
+
+					// 计算差值并输出结果
+					//long diffInMillis = currentTimeInMillis - specifiedTimeInMillis;
+
+					if (currentTimeInMillis >= specifiedTimeInMillis){
+						masterDataMapper.updateMasterDataIsExpire(md.getId());
+					}
+				}
 				String intranetIp = "";//内网ip
 				String extranetIp = "";//外网ip
 				String domainName = "";//域名
@@ -353,6 +372,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 			if (ipAgreement!=null){
 				String dept = masterDataMapper.selectSysDeptById(Long.valueOf(ipAgreement.getThematicGroup()));
 				ipAgreement.setThematicGroupName(dept);
+				ipAgreement.setIpType(masterData.getIpType());
 			}
 			map.put("ipAgreement", ipAgreement);
 		} else if ("domain".equals(masterData.getItemType())) {
@@ -563,7 +583,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 	}
 
 	@Override
-	public void exportWordMasterData(String applyType, Long menuTypeId, HttpServletResponse response) {
+	public void exportWordMasterData(String applyType, Long menuTypeId,String ipType, HttpServletResponse response) {
 		Map<String, Object> dataMap = new HashMap<>();
 		Map<String, Object> agreement = new HashMap<>();
 		//文件路径
@@ -622,7 +642,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 			}
 		}
 
-		if ("ipAgreement".equals(applyType)) {
+		if ("ipAgreement".equals(applyType) || "idcAgreementGraded".equals(applyType) || "cloudAgreement".equals(applyType)) {
 			IpGradingReport ipGradingReport = ipGradingReportMapper.selectIpGradingReportById(menuTypeId);
 			if (ipGradingReport != null) {
 				dataMap.put("systematicName", ipGradingReport.getSystematicName());
@@ -669,6 +689,51 @@ public class MasterDataServiceImpl implements MasterDataService {
 				String pdfFileName = realPath + "dns.pdf";
 
 				freemarkerBase.word2pdf(dataMap, response, "DomainTypeNew.ftl", wordFileName, pdfFileName);
+			}
+		}
+
+		if ("ipApplyAgreement".equals(applyType)) {
+			IpAgreement ipAgreement = ipAgreementMapper.selectIpAgreementById(menuTypeId);
+			if (ipAgreement != null) {
+				dataMap.put("secondParty", ipAgreement.getSecondParty());
+				dataMap.put("ipNum", ipAgreement.getIpNum());
+				dataMap.put("thematicGroup", ipAgreement.getThematicGroup());
+				dataMap.put("projectLeader", ipAgreement.getProjectLeader());
+				dataMap.put("applicantUser", ipAgreement.getApplicantUser());
+				dataMap.put("phone", ipAgreement.getPhone());
+				dataMap.put("email", ipAgreement.getEmail());
+				dataMap.put("usePosition", ipAgreement.getUsePosition());
+				dataMap.put("useType", ipAgreement.getUseType());
+				dataMap.put("ipUse", ipAgreement.getIpUse());
+				dataMap.put("ip", ipAgreement.getIp());
+				dataMap.put("subnetMask", ipAgreement.getSubnetMask());
+				dataMap.put("gateway", ipAgreement.getGateway());
+				dataMap.put("dns", ipAgreement.getDns());
+				dataMap.put("sY", year.format(ipAgreement.getStartTime()));
+				dataMap.put("sM", month.format(ipAgreement.getStartTime()));
+				dataMap.put("sD", day.format(ipAgreement.getStartTime()));
+				dataMap.put("eY", year.format(ipAgreement.getEndTime()));
+				dataMap.put("eM", month.format(ipAgreement.getEndTime()));
+				dataMap.put("eD", day.format(ipAgreement.getEndTime()));
+
+				if ("intranetIp".equals(ipType)){
+					String wordFileName = realPath + "intranetIp.docx";
+
+					String pdfFileName = realPath + "intranetIp.pdf";
+
+					freemarkerBase.word2pdf(dataMap, response, "intranetIp.ftl", wordFileName, pdfFileName);
+				}
+				if ("publicIp".equals(ipType)){
+					dataMap.put("chargeStandard", ipAgreement.getChargeStandard());
+					dataMap.put("paymentMethod", ipAgreement.getPaymentMethod());
+					dataMap.put("paymentUppercase", ipAgreement.getPaymentUppercase());
+					String wordFileName = realPath + "publicIp.docx";
+
+					String pdfFileName = realPath + "publicIp.pdf";
+
+					freemarkerBase.word2pdf(dataMap, response, "publicIp.ftl", wordFileName, pdfFileName);
+				}
+
 			}
 		}
 	}
@@ -768,6 +833,42 @@ public class MasterDataServiceImpl implements MasterDataService {
 			return R.ok("发送成功");
 		}
 		return R.ok("发送成功");
+	}
+
+	@Override
+	public R expireSendEmail(CheckReason checkReason) throws ParseException {
+		String email = masterDataMapper.selectSysUserByUserId(checkReason.getUserId());
+		EmailSender emailSender = new EmailSender();
+		emailSender.setName(checkReason.getUserName());
+		emailSender.setToEmail(email);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = formatter.parse(checkReason.getExpireTime());
+		emailSender.setExpireTime(date);
+		String emailType = "applyExpire";
+//		if ("2".equals(checkReason.getIsAgree())) {
+//			emailType = "applyAgree";
+//		} else {
+//			emailType = "applyRefuse";
+//		}
+		if ("cloud".equals(checkReason.getItemType())) {
+			emailSender.setItemType("云服务器");
+		}
+		if ("ip".equals(checkReason.getItemType())) {
+			emailSender.setItemType("IP地址");
+		}
+		if ("idc".equals(checkReason.getItemType())) {
+			emailSender.setItemType("IDC服务器");
+		}
+		if ("domain".equals(checkReason.getItemType())) {
+			emailSender.setItemType("二级域名解析");
+		}
+
+		emailSender.setEmailType(emailType);
+		R r = mailService.sendSimpleMail(emailSender);
+		if (r.getCode()==0){
+			masterDataMapper.updateMasterDataExpireStatus("4", checkReason.getMasterId());
+		}
+		return R.ok(1,"发送成功");
 	}
 
 	@Override

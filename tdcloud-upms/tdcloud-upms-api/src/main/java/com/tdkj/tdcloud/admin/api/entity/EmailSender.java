@@ -2,6 +2,8 @@ package com.tdkj.tdcloud.admin.api.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class EmailSender {
 
@@ -11,5 +13,7 @@ public class EmailSender {
 	public String emailType;
 	public String passWord;
 	public String itemType;
+
+	public Date expireTime;//到期日期
 
 }

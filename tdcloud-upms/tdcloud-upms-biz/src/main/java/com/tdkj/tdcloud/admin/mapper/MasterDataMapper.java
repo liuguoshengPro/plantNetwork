@@ -60,7 +60,9 @@ public interface MasterDataMapper
      */
     public int updateMasterData(MasterData masterData);
     public int updateMasterDataAuditStatus(@Param("auditStatus") String auditStatus, @Param("masterId") Long masterId, @Param("auditTime")Date auditTime);
+    public int updateMasterDataExpireStatus(@Param("auditStatus") String auditStatus, @Param("masterId") Long masterId);
     public int updateMasterDataAllocationStatus(@Param("allocationStatus") String allocationStatus,@Param("masterId") Long masterId,@Param("allocationTime")Date allocationTime);
+    public int updateMasterDataIsExpire(@Param("masterId") Long masterId);
 
     /**
      * 删除主数据

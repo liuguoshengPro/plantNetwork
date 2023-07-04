@@ -137,6 +137,26 @@ public class PlantMailServiceImpl implements PlantMailService {
 				//redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
 			}
 
+			//到期提醒
+			if ("applyExpire".equals(emailSender.getEmailType())){
+				SimpleDateFormat year = new SimpleDateFormat("yyyy");
+				SimpleDateFormat month = new SimpleDateFormat("MM");
+				SimpleDateFormat day = new SimpleDateFormat("dd");
+				String year1 = year.format(emailSender.getExpireTime());
+				String month1 = month.format(emailSender.getExpireTime());
+				String day1 = day.format(emailSender.getExpireTime());
+				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"将于"+year1+"年"+month1+"月"+day1+"日到期\n" +
+						"为避免到期后业务关停，请尽快前往云服务平台续签协议，谢谢！\n" +
+						"此邮件由系统自动发出,请勿直接回复。\n" +
+						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +
+						"感谢您的访问,祝您使用愉快!\n" +
+						"科技信息中心\n" +
+						""+y.format(currentDate)+"年"+m.format(currentDate)+"月"+d.format(currentDate)+"日";
+				helper.setText(textContent); // 内容
+				//redisTemplate.opsForValue().set(emailSender.getToEmail() + emailSender.getEmailType(), String.valueOf(num), 300, TimeUnit.SECONDS);//随机验证码
+			}
+
 			sender.send(message);
 			logger.info("邮件已经发送。");
 

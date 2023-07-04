@@ -35,6 +35,7 @@ public class CheckReason
     private String isAgree;
     private String remark;
     private String userName;
+	public String expireTime;//到期日期
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;

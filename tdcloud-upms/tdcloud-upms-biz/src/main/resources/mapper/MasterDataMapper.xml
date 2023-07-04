@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="auditTime"    column="audit_time"    />
         <result property="allocationTime"    column="allocation_time"    />
         <result property="ipType"    column="ip_type"    />
+        <result property="isExpire"    column="is_expire"    />
     </resultMap>
 
 	<resultMap type="com.tdkj.tdcloud.admin.api.vo.MasterDataVO" id="MasterDataResultVO">
@@ -30,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
     <sql id="selectMasterDataVo">
-        select id, Item_type,allocation_time,ip_type, create_time,audit_time,user_id,user_name, audit_status, allocation_status, submit_time, is_delete from master_data
+        select id, Item_type,allocation_time,ip_type,is_expire, create_time,audit_time,user_id,user_name, audit_status, allocation_status, submit_time, is_delete from master_data
     </sql>
 
 	<sql id="selectExportMasterDataVo">
@@ -47,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
             <if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
             <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="isExpire != null and isExpire != ''"> and is_expire = #{isExpire}</if>
 			<if test="beginSubmitTime != null and beginSubmitTime != '' and endSubmitTime != null and endSubmitTime != ''"> and submit_time between #{beginSubmitTime} and #{endSubmitTime}</if>
 			<if test="beginAuditTime != null and beginAuditTime != '' and endAuditTime != null and endAuditTime != ''"> and audit_time between #{beginAuditTime} and #{endAuditTime}</if>
 			<if test="beginAllocationTime != null and beginAllocationTime != '' and endAllocationTime != null and endAllocationTime != ''"> and allocation_time between #{beginAllocationTime} and #{endAllocationTime}</if>
@@ -65,6 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
 			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
+			<if test="isExpire != null and isExpire != ''"> and is_expire = #{isExpire}</if>
 			<if test="beginSubmitTime != null and beginSubmitTime != '' and endSubmitTime != null and endSubmitTime != ''"> and submit_time between #{beginSubmitTime} and #{endSubmitTime}</if>
 			<if test="beginAuditTime != null and beginAuditTime != '' and endAuditTime != null and endAuditTime != ''"> and audit_time between #{beginAuditTime} and #{endAuditTime}</if>
 			<if test="beginAllocationTime != null and beginAllocationTime != '' and endAllocationTime != null and endAllocationTime != ''"> and allocation_time between #{beginAllocationTime} and #{endAllocationTime}</if>
@@ -91,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
 			<if test="allocationStatus != null  and allocationStatus != ''"> and allocation_status = #{allocationStatus}</if>
 			<if test="isDelete != null "> and is_delete = #{isDelete}</if>
+			<if test="isExpire != null and isExpire != ''"> and is_expire = #{isExpire}</if>
 			<if test="beginSubmitTime != null and beginSubmitTime != '' and endSubmitTime != null and endSubmitTime != ''"> and submit_time between #{beginSubmitTime} and #{endSubmitTime}</if>
 			<if test="beginAuditTime != null and beginAuditTime != '' and endAuditTime != null and endAuditTime != ''"> and audit_time between #{beginAuditTime} and #{endAuditTime}</if>
 			<if test="beginAllocationTime != null and beginAllocationTime != '' and endAllocationTime != null and endAllocationTime != ''"> and allocation_time between #{beginAllocationTime} and #{endAllocationTime}</if>
@@ -141,6 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="auditTime != null">audit_time,</if>
             <if test="allocationTime != null">allocation_time,</if>
             <if test="ipType != null">ip_type,</if>
+            <if test="isExpire != null">is_expire,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="itemType != null">#{itemType},</if>
@@ -154,6 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="auditTime != null">#{auditTime},</if>
             <if test="allocationTime != null">#{allocationTime},</if>
             <if test="ipType != null">#{ipType},</if>
+            <if test="isExpire != null">#{isExpire},</if>
          </trim>
     </insert>
 
@@ -169,7 +175,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null">user_name = #{userName},</if>
             <if test="auditTime != null">audit_time = #{auditTime},</if>
             <if test="allocationTime != null">allocation_time = #{allocationTime},</if>
+            <if test="allocationTime == null">allocation_time = null,</if>
             <if test="ipType != null">ip_type = #{ipType},</if>
+            <if test="isExpire != null">is_expire = #{isExpire},</if>
         </trim>
         where id = #{id}
     </update>
@@ -180,9 +188,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where id = #{masterId}
 	</update>
 
+	<update id="updateMasterDataExpireStatus">
+		update master_data
+		set audit_status = #{auditStatus}
+		where id = #{masterId}
+	</update>
+
 	<update id="updateMasterDataAllocationStatus">
 		update master_data
 		set allocation_status = #{allocationStatus},allocation_time = #{allocationTime}
+		where id = #{masterId}
+	</update>
+
+	<update id="updateMasterDataIsExpire">
+		update master_data
+		set is_expire = '1'
 		where id = #{masterId}
 	</update>
 

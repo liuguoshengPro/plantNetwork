@@ -69,7 +69,7 @@ public class MasterDataVO
     /** 0使用1删除 */
     //private Long isDelete;
 
-
+	private int isExpire;
 
 
 }
