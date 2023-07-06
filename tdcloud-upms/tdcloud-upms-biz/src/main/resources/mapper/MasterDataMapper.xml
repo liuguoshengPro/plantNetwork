@@ -114,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectSysDept" parameterType="Long" resultType="com.tdkj.tdcloud.admin.api.entity.SysDept">
 		SELECT * FROM sys_dept
-		where parent_id != #{parentId}
+		where parent_id != #{parentId} and del_flag = 0
 	</select>
 
 	<select id="selectSysDeptById" parameterType="Long" resultType="String">

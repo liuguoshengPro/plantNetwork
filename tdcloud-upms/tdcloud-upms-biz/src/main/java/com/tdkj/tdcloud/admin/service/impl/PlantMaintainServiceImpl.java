@@ -348,6 +348,7 @@ public class PlantMaintainServiceImpl extends ServiceImpl<PlantMaintainMapper, P
 
 	@Override
 	public R addPlantMaintain(PlantMaintain plantMaintain) {
+		plantMaintain.setCreateTime(new Date());
 		return R.ok(plantMaintainMapper.insertPlantMaintain(plantMaintain));
 	}
 

@@ -697,7 +697,7 @@ public class MasterDataServiceImpl implements MasterDataService {
 			if (ipAgreement != null) {
 				dataMap.put("secondParty", ipAgreement.getSecondParty());
 				dataMap.put("ipNum", ipAgreement.getIpNum());
-				dataMap.put("thematicGroup", ipAgreement.getThematicGroup());
+				dataMap.put("thematicGroup", masterDataMapper.selectSysDeptById(Long.valueOf(ipAgreement.getThematicGroup())));
 				dataMap.put("projectLeader", ipAgreement.getProjectLeader());
 				dataMap.put("applicantUser", ipAgreement.getApplicantUser());
 				dataMap.put("phone", ipAgreement.getPhone());

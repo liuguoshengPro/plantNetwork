@@ -146,7 +146,7 @@ public class PlantMailServiceImpl implements PlantMailService {
 				String month1 = month.format(emailSender.getExpireTime());
 				String day1 = day.format(emailSender.getExpireTime());
 				String textContent = "亲爱的"+emailSender.getName()+", 您好！\n" +
-						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"将于"+year1+"年"+month1+"月"+day1+"日到期\n" +
+						"您在中国科学院昆明植物研究所一体化云服务平台申请的"+ emailSender.getItemType() +"将于"+year1+"年"+month1+"月"+day1+"日到期，" +
 						"为避免到期后业务关停，请尽快前往云服务平台续签协议，谢谢！\n" +
 						"此邮件由系统自动发出,请勿直接回复。\n" +
 						"如果在使用中遇到问题,请发邮件到 jintao@mail.kib.ac.cn ,我们将尽快回复。\n" +

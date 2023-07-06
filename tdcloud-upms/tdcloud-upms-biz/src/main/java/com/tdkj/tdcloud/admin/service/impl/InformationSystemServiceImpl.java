@@ -74,8 +74,10 @@ public class InformationSystemServiceImpl implements InformationSystemService
 	public R getInformationSystemInfo(Long id) {
 		InformationSystem informationSystem = informationSystemMapper.selectInformationSystemById(id);
 		if (informationSystem!=null){
-			String dept = masterDataMapper.selectSysDeptById(Long.valueOf(informationSystem.getUseDept()));
-			informationSystem.setDeptName(dept);
+			if (informationSystem.getUseDept()!=null && !"".equals(informationSystem.getUseDept())){
+				String dept = masterDataMapper.selectSysDeptById(Long.valueOf(informationSystem.getUseDept()));
+				informationSystem.setDeptName(dept);
+			}
 		}
 		return R.ok(informationSystem,"详情信息");
 	}

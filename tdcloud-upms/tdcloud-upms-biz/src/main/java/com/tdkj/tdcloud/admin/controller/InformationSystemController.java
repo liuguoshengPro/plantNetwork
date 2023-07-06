@@ -57,6 +57,7 @@ public class InformationSystemController
 	 * @param id
 	 * @return
 	 */
+	@Inner(value = false)
 	@GetMapping("/getInformationSystemInfo")
 	public R getInformationSystemInfo(Long id){
 
